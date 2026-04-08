@@ -4,6 +4,8 @@ MatchFlow is a smart stadium assistant for large cricket venues, designed to hel
 
 The project is being built as a high-velocity, challenge-scoped 72-hour MVP focused on practical, real-world usability for cricket venues such as Narendra Modi Stadium, Eden Gardens, and similar high-capacity stadium environments.
 
+Live demo: https://matchflow-972157503709.us-west1.run.app
+
 ---
 
 ## Vision
