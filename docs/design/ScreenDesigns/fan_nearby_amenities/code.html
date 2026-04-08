@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MatchFlow | Nearby Amenities</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fc",
+                        "outline-variant": "#c6c5d4",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#ffb5a0",
+                        "surface-bright": "#f7f9fc",
+                        "inverse-primary": "#b9c5f2",
+                        "on-tertiary-fixed-variant": "#004f4f",
+                        "outline": "#767683",
+                        "surface-dim": "#d8dadd",
+                        "on-tertiary-container": "#42a6a5",
+                        "primary-container": "#222e52",
+                        "on-secondary-fixed-variant": "#862200",
+                        "tertiary-fixed-dim": "#76d6d5",
+                        "on-surface-variant": "#454652",
+                        "surface-variant": "#e0e3e6",
+                        "primary-fixed-dim": "#b9c5f2",
+                        "on-tertiary-fixed": "#002020",
+                        "on-secondary-fixed": "#3b0900",
+                        "inverse-on-surface": "#eff1f4",
+                        "surface-container-low": "#f2f4f7",
+                        "on-primary": "#ffffff",
+                        "secondary": "#b02f00",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#541100",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#ff5722",
+                        "surface-container-highest": "#e0e3e6",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#0b193c",
+                        "surface-container-high": "#e6e8eb",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#003636",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-primary-container": "#8a96c0",
+                        "on-primary-fixed": "#0b1a3d",
+                        "surface-container": "#eceef1",
+                        "background": "#f7f9fc",
+                        "surface-tint": "#515d84",
+                        "on-surface": "#191c1e",
+                        "secondary-fixed": "#ffdbd1",
+                        "tertiary-fixed": "#93f2f2",
+                        "on-primary-fixed-variant": "#39456b",
+                        "primary-fixed": "#dbe1ff",
+                        "tertiary": "#001f1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopAppBar -->
+<header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl text-[#0b193c] dark:text-blue-400 font-['Manrope'] font-bold text-lg docked full-width top-0 z-50 fixed flex justify-between items-center w-full px-6 py-4 no-border bg-slate-50 dark:bg-slate-800/50 flat no-shadows">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="User Profile" data-alt="close up professional headshot of a stadium operations manager in a smart casual uniform with stadium lights in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLfOlMNu_J2pN_wNOKlzjXhHO4awYNFQ6dHWAqdMNfS8ULOQG_Mla1VquKKT3S2u-dOl19q1PPLI3SOFKNUFHqi_7tsdMQeS2eTlyd15L9u3XlZSVOO8AIsyTFr6wH8WtwuVXOKtPZ2uVPTe7ZhfZaUBQ3rNA7Kkv4XpskXXUglWge_-7azG71LNFmkk2vmFsbyfMABoOTgq9y_J7IRJvUDBqsCvwJnq_NMbogqi__m_6quwa5fOj03n791oQsnHH3ng1X4VLvOqk"/>
+</div>
+<span class="text-xl font-bold tracking-tighter text-[#0b193c] dark:text-white">MatchFlow</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center px-3 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed text-xs font-bold uppercase tracking-wider">
+<span class="material-symbols-outlined text-sm mr-1">wifi</span>
+                Connected
+            </span>
+</div>
+</header>
+<main class="pt-24 pb-32 px-4 max-w-5xl mx-auto">
+<!-- Hero Header -->
+<div class="mb-8">
+<h1 class="font-headline text-4xl font-bold text-primary tracking-tight mb-2">Nearby Amenities</h1>
+<p class="text-on-surface-variant font-medium">Real-time occupancy and walk-times from Stand B-12.</p>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2 mb-8 overflow-x-auto pb-2 scrollbar-hide">
+<button class="bg-primary text-white px-6 py-2.5 rounded-xl font-semibold flex items-center gap-2 transition-transform active:scale-95">
+<span class="material-symbols-outlined">restaurant</span>
+                Food &amp; Drinks
+            </button>
+<button class="bg-surface-container-highest text-on-surface-variant px-6 py-2.5 rounded-xl font-semibold flex items-center gap-2 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">wc</span>
+                Washrooms
+            </button>
+<button class="bg-surface-container-highest text-on-surface-variant px-6 py-2.5 rounded-xl font-semibold flex items-center gap-2 hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">medical_services</span>
+                First Aid
+            </button>
+</div>
+<!-- Section: Food & Drinks -->
+<div class="mb-10">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline text-2xl font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">fastfood</span>
+                    Food &amp; Drinks
+                </h2>
+<span class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">4 Locations Found</span>
+</div>
+<div class="space-y-4">
+<!-- Recommended Item -->
+<div class="group relative bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_8px_32px_rgba(11,25,60,0.06)] hover:shadow-[0_12px_48px_rgba(11,25,60,0.1)] transition-all">
+<div class="absolute top-0 left-0 w-1.5 h-full bg-secondary"></div>
+<div class="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded-lg bg-surface-container-high flex-shrink-0 overflow-hidden">
+<img alt="Snack Bay 1" data-alt="gourmet stadium burger with fresh ingredients and craft soda in a high-end sports arena setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVpa-5sot-UsZ4DErB03XfKGVKLWDfIpfIgY7a5v8V0Jw7bjzjT-RVEZlCv8AlTyK2VUY7e7GU5P45_lvYPYQA2PYKAoArUnN9VlmqjA9Sgf-e-cxuH4hwrTYV2n5wbX8vDY_UUcQ6W0ISufJ6JZEAdFJif0jotPhEDGgPzMmDsgkyMjhfcnmHTq4sn0hD-F2HCVD_hqHBNlL71sOldzHk7ZTHK2MpITlz8cV4igoPsbTBk0y36edppSOOrRLF8Jf5gXXoEhKAvwc"/>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline font-bold text-lg text-primary">Snack Bay 1</h3>
+<span class="bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase px-2 py-0.5 rounded-full">Recommended</span>
+</div>
+<div class="flex items-center gap-4 text-sm text-on-surface-variant">
+<span class="flex items-center gap-1 font-semibold text-tertiary-container">
+<span class="material-symbols-outlined text-sm">near_me</span>
+                                        120m • 2 mins walk
+                                    </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+                                        Open until 11:00 PM
+                                    </span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 pt-4 md:pt-0 border-surface-variant">
+<div class="text-right">
+<span class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Wait Time</span>
+<div class="flex items-center gap-1.5 text-on-tertiary-container font-bold">
+<div class="flex gap-0.5">
+<div class="w-1 h-3 bg-on-tertiary-container rounded-full"></div>
+<div class="w-1 h-3 bg-surface-variant rounded-full"></div>
+<div class="w-1 h-3 bg-surface-variant rounded-full"></div>
+</div>
+                                    Low (2-4 mins)
+                                </div>
+</div>
+<button class="bg-primary text-white p-3 rounded-xl hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined">directions_walk</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Regular Item -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_8px_32px_rgba(11,25,60,0.04)]">
+<div class="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded-lg bg-surface-container-high flex-shrink-0 overflow-hidden">
+<img alt="Boundary Pizza" data-alt="artisanal pizza slice on a paper tray with stadium seating blurred in the background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0QcrYH3vcCqv0EVjqLqHJHHYZLs4_2DewOwlzz6TgMUPRG-6YXvlWkPVtH1Zf7JNlxF6WZflNfxbBo9WPK3cBYDtqGRikRp16KgxY0zByYyEuv300943kCQ9eEMebbb4BmaJOQtVmwevyf1CfA1BRXMAQEQI8YX00KRhgMStpZKtfcXNaAbemmlC8DCecjX_h3JEKN8ZTYC-0JO_LQx3ailZh5yW74YUsg_Lvy0JFBU2ORL-wgN0mMb9YGruOtu6_CW_qbyDR6NM"/>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg text-primary mb-1">Boundary Pizza</h3>
+<div class="flex items-center gap-4 text-sm text-on-surface-variant">
+<span class="flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-sm">near_me</span>
+                                        350m • 5 mins walk
+                                    </span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 pt-4 md:pt-0 border-surface-variant">
+<div class="text-right">
+<span class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Wait Time</span>
+<div class="flex items-center gap-1.5 text-secondary font-bold">
+<div class="flex gap-0.5">
+<div class="w-1 h-3 bg-secondary rounded-full"></div>
+<div class="w-1 h-3 bg-secondary rounded-full"></div>
+<div class="w-1 h-3 bg-surface-variant rounded-full"></div>
+</div>
+                                    Moderate (8-12 mins)
+                                </div>
+</div>
+<button class="bg-surface-container-highest text-primary p-3 rounded-xl hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">directions_walk</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section: Washrooms -->
+<div class="mb-10">
+<div class="flex items-center justify-between mb-6">
+<h2 class="font-headline text-2xl font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">wc</span>
+                    Washrooms
+                </h2>
+<span class="text-sm font-bold text-on-surface-variant uppercase tracking-widest">3 Locations Nearby</span>
+</div>
+<div class="space-y-4">
+<!-- Washroom Item High Wait -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_8px_32px_rgba(11,25,60,0.04)] border-l-4 border-error/20">
+<div class="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-primary">man</span>
+</div>
+<div>
+<h3 class="font-headline font-bold text-lg text-primary mb-1">Washroom South (Level 1)</h3>
+<div class="flex items-center gap-4 text-sm text-on-surface-variant">
+<span class="flex items-center gap-1 font-semibold">
+<span class="material-symbols-outlined text-sm">near_me</span>
+                                        80m • 1 min walk
+                                    </span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 pt-4 md:pt-0 border-surface-variant">
+<div class="text-right">
+<span class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Wait Time</span>
+<div class="flex items-center gap-1.5 text-error font-bold">
+<div class="flex gap-0.5">
+<div class="w-1 h-3 bg-error rounded-full"></div>
+<div class="w-1 h-3 bg-error rounded-full"></div>
+<div class="w-1 h-3 bg-error rounded-full"></div>
+</div>
+                                    High (15+ mins)
+                                </div>
+</div>
+<button class="bg-surface-container-highest text-primary p-3 rounded-xl hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">directions_walk</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Recommended Washroom -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_8px_32px_rgba(11,25,60,0.06)] border-l-4 border-tertiary-container">
+<div class="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex items-start gap-4">
+<div class="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-on-tertiary-fixed">wc</span>
+</div>
+<div>
+<div class="flex items-center gap-2 mb-1">
+<h3 class="font-headline font-bold text-lg text-primary">Washroom North-West</h3>
+<span class="bg-tertiary-container text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded-full">Fastest</span>
+</div>
+<div class="flex items-center gap-4 text-sm text-on-surface-variant">
+<span class="flex items-center gap-1 font-semibold text-tertiary-container">
+<span class="material-symbols-outlined text-sm">near_me</span>
+                                        220m • 3 mins walk
+                                    </span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 pt-4 md:pt-0 border-surface-variant">
+<div class="text-right">
+<span class="block text-[10px] font-bold text-on-surface-variant uppercase tracking-widest mb-1">Wait Time</span>
+<div class="flex items-center gap-1.5 text-on-tertiary-container font-bold">
+<div class="flex gap-0.5">
+<div class="w-1 h-3 bg-on-tertiary-container rounded-full"></div>
+<div class="w-1 h-3 bg-surface-variant rounded-full"></div>
+<div class="w-1 h-3 bg-surface-variant rounded-full"></div>
+</div>
+                                    Low (1-2 mins)
+                                </div>
+</div>
+<button class="bg-primary text-white p-3 rounded-xl hover:bg-primary-container transition-colors">
+<span class="material-symbols-outlined">directions_walk</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Heatmap Hint -->
+<div class="bg-primary-container/10 border border-primary-container/20 rounded-2xl p-6 mt-12 flex items-center gap-6">
+<div class="flex-shrink-0 w-24 h-24 rounded-xl overflow-hidden bg-white shadow-lg">
+<img alt="Stadium Map" data-alt="abstract heat map of a cricket stadium showing crowd density in shades of blue and orange" data-location="London" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtipfrbL9zxS9esjHEZxnkumrq9aJadtx_s3Bsu6A-rfOMXRksOctLrk5m5C_bZvlxwi51gjrcSYE0tCvPve0HOt7rcrweozKuDAWyLcXhiv_2vAgasGgqXGaZUpVfp_feVkNZwwOLzWu_aVsi70kb0rrK0ZKAVqsa3ljA9wgNnYWGFX-vvLKkcRureuxdcDEnChJO42ZbtS-AzwlmbtkPi2jdBjfn0FhDwRCduxB8wbBgengh4ZqgGXQKWQiqgVLQsjlzb52poEA"/>
+</div>
+<div>
+<h4 class="font-headline font-bold text-primary mb-1">Stadia Heatmap View</h4>
+<p class="text-on-surface-variant text-sm mb-4">Switch to the interactive map to visualize crowd density and live movement paths.</p>
+<button class="text-primary font-bold text-xs uppercase tracking-widest flex items-center gap-1 hover:underline">
+                    Open Map View <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl fixed bottom-0 w-full z-50 rounded-t-xl no-border tonal-shift bg-slate-50 dark:bg-slate-800/50 shadow-[0_-8px_32px_rgba(11,25,60,0.06)] fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2">
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-transform scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined">sports_cricket</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Match Center</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#222e52] text-white rounded-xl px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-transform scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined">storefront</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Amenities</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-transform scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined">directions</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Route</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-transform scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Order</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-transform scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined">notifications</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Alerts</span>
+</a>
+</nav>
+</body></html>

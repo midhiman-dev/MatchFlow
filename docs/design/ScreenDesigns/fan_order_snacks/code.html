@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MatchFlow - In-Seat Ordering</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fc",
+                        "outline-variant": "#c6c5d4",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#ffb5a0",
+                        "surface-bright": "#f7f9fc",
+                        "inverse-primary": "#b9c5f2",
+                        "on-tertiary-fixed-variant": "#004f4f",
+                        "outline": "#767683",
+                        "surface-dim": "#d8dadd",
+                        "on-tertiary-container": "#42a6a5",
+                        "primary-container": "#222e52",
+                        "on-secondary-fixed-variant": "#862200",
+                        "tertiary-fixed-dim": "#76d6d5",
+                        "on-surface-variant": "#454652",
+                        "surface-variant": "#e0e3e6",
+                        "primary-fixed-dim": "#b9c5f2",
+                        "on-tertiary-fixed": "#002020",
+                        "on-secondary-fixed": "#3b0900",
+                        "inverse-on-surface": "#eff1f4",
+                        "surface-container-low": "#f2f4f7",
+                        "on-primary": "#ffffff",
+                        "secondary": "#b02f00",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#541100",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#ff5722",
+                        "surface-container-highest": "#e0e3e6",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#0b193c",
+                        "surface-container-high": "#e6e8eb",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#003636",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-primary-container": "#8a96c0",
+                        "on-primary-fixed": "#0b1a3d",
+                        "surface-container": "#eceef1",
+                        "background": "#f7f9fc",
+                        "surface-tint": "#515d84",
+                        "on-surface": "#191c1e",
+                        "secondary-fixed": "#ffdbd1",
+                        "tertiary-fixed": "#93f2f2",
+                        "on-primary-fixed-variant": "#39456b",
+                        "primary-fixed": "#dbe1ff",
+                        "tertiary": "#001f1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface min-h-screen pb-32">
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex justify-between items-center px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center text-white font-bold">JD</div>
+<span class="text-xl font-bold tracking-tighter text-[#0b193c] dark:text-white">MatchFlow</span>
+</div>
+<div class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-surface-container-high">
+<span class="material-symbols-outlined text-sm text-secondary" style="font-variation-settings: 'FILL' 1;">sensors</span>
+<span class="text-xs font-bold uppercase tracking-wider text-primary">Connected</span>
+</div>
+</header>
+<main class="pt-24 px-4 max-w-2xl mx-auto">
+<!-- Pick-up Banner: Asymmetric & High Contrast -->
+<section class="mb-8 relative overflow-hidden bg-secondary-container rounded-xl p-6 flex items-center justify-between shadow-lg">
+<div class="relative z-10">
+<p class="text-on-secondary-container font-headline font-bold text-lg leading-tight">Skip the line - pickup at Bay 4</p>
+<p class="text-on-secondary-container/80 text-sm font-semibold mt-1">Ready in approximately 10 mins</p>
+</div>
+<div class="relative z-10 bg-white/20 backdrop-blur-md p-3 rounded-xl border border-white/30">
+<span class="material-symbols-outlined text-white text-3xl">timer</span>
+</div>
+<!-- Decorative Grain -->
+<div class="absolute inset-0 opacity-10 pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+</section>
+<!-- Menu Header -->
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-2xl font-headline font-extrabold text-primary">Stadium Menu</h2>
+<div class="flex items-center gap-2 text-primary font-bold bg-primary/5 px-3 py-1 rounded-lg">
+<span class="material-symbols-outlined text-sm">confirmation_number</span>
+<span class="text-sm">Seat 42B</span>
+</div>
+</div>
+<!-- Menu Grid: Bento-inspired cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Item 1: Cricket Burger -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col group">
+<div class="h-48 overflow-hidden relative">
+<img alt="Cricket Burger" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Gourmet double beef burger with melted cheese and fresh greens on a toasted brioche bun, professional studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAtE0eAdXNiozTYH9hHECas1pSzSNeEb9vTCValyuJee-rC1BT6Da21y_DI6nb_6E3-NeW-PmquNf86wpuUJ91B2BZhTw0kTzaZl246mvl57TuH2ydfgS5q1O5P_DnQmtEp3H8f1U3u7h6UA9hOlw5V9IBzB8fRHOs9ouOnuMdOetXYPd6Uuqvq48vK0Sl3438zAU4eH-_-JUi7z-VWuFS2PrdqlM5_V-s-1LyyLNpQJkCsSkl1Lh1V5U_a67af-cWQUpNbiCvl3RI"/>
+<div class="absolute top-3 right-3 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-md uppercase tracking-tighter">Bestseller</div>
+</div>
+<div class="p-4 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline font-bold text-lg text-primary">Cricket Burger</h3>
+<span class="font-headline font-bold text-secondary">$14.50</span>
+</div>
+<p class="text-sm text-on-surface-variant mb-4 line-clamp-2">Double prime beef patty, spicy stadium sauce, and crisp lettuce.</p>
+<button class="mt-auto w-full py-3 px-4 bg-primary text-on-primary rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                        Add to Cart
+                    </button>
+</div>
+</div>
+<!-- Item 2: Samosa (Set of 2) -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col group">
+<div class="h-48 overflow-hidden">
+<img alt="Samosa" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Two golden crispy fried samosas on a rustic plate with mint chutney dipping sauce, warm daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqsnrfFDoGGbw54Br11yDNT9AcU44GSFoTUM2pib1DBXVRN1-7oHCTYysIIkK6sxK2t_jCs0XDWWEYN5tiadC2L4F5cD07A9dpXRi3eYBBVKSXtFScGHWKbHauyZeNMHR5g1A5VynQEbHyG3GOfb2UvXj7r6G4027U0bvOD-6cJ3amiHmd_s8Y82ZYhg_FyFZ-JBjDkp2wpQSQvY0rCNzRMnAwRuxxeEfnsidpgAv0ebpIPAhGOuoLflXJceQIfq3U0dCY8V73NC0"/>
+</div>
+<div class="p-4 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline font-bold text-lg text-primary">Samosa (2pcs)</h3>
+<span class="font-headline font-bold text-secondary">$6.00</span>
+</div>
+<p class="text-sm text-on-surface-variant mb-4">Authentic spiced potato and pea filling with tangy mint chutney.</p>
+<button class="mt-auto w-full py-3 px-4 bg-primary text-on-primary rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                        Add to Cart
+                    </button>
+</div>
+</div>
+<!-- Item 3: Masala Chai -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col group">
+<div class="h-48 overflow-hidden">
+<img alt="Masala Chai" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Traditional Indian masala chai in a small glass cup with steam rising, cardamom pods and cinnamon sticks scattered nearby" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcbL8Rn6bMbVMMp6FVeYango7Ojaa3CowsTETOKDIITiusIosZyyyLhazDJCsZR79j5XdVbbvtUz_1WhffQQ2z_Dz8LWTaSOgQ36OPRS6yJeyFUARgC_GlSfuflrwjpyKiz3Us3rRxFrRrfUFVI_NW_eQxQzp3w2JhMmOdidZ-CDDYRRoo_g1v3rZsl3yhd031PH_15qFE6ZcT6Ojzti0YEV3BA5URTe3QjzVqdk1MK6pOuT6loekzXVdeqODelFM6fA8iAzPezZc"/>
+</div>
+<div class="p-4 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline font-bold text-lg text-primary">Masala Chai</h3>
+<span class="font-headline font-bold text-secondary">$4.50</span>
+</div>
+<p class="text-sm text-on-surface-variant mb-4">Brewed with fresh ginger, cardamom, and premium Assam tea leaves.</p>
+<button class="mt-auto w-full py-3 px-4 bg-primary text-on-primary rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                        Add to Cart
+                    </button>
+</div>
+</div>
+<!-- Item 4: Mineral Water -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col group">
+<div class="h-48 overflow-hidden">
+<img alt="Mineral Water" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Chilled bottle of mineral water with condensation droplets, against a soft focus blue stadium background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAGXXc7BDugN0W7eiJ3G6NYsLDHOgNWITbTBfrDxW-AHAklfJuBYNg6UBXeC7bvUgjkwTz2e73WR5l82mheAL8LLg-30E75EckgmIjMduEOCEun3KXAY9Fvbt_9FG8as0-mKHSIp7qE-Yc83XiCv1GjInc6kjF6UmtNJIEuIjS4i3oXQnToqgKFxAi3liyycJjxqh4CDx0Tuykx5e1UZhydIgl7luf6OP1HDxW-6PhS1sDxsf_ZFNu51NFt2qmpLPRA9foOzrh7Iss"/>
+</div>
+<div class="p-4 flex-1 flex flex-col">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline font-bold text-lg text-primary">Mineral Water</h3>
+<span class="font-headline font-bold text-secondary">$3.50</span>
+</div>
+<p class="text-sm text-on-surface-variant mb-4">750ml chilled spring water for maximum stadium hydration.</p>
+<button class="mt-auto w-full py-3 px-4 bg-primary text-on-primary rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-sm">add_shopping_cart</span>
+                        Add to Cart
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar Shell -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl z-50 rounded-t-xl shadow-[0_-8px_32px_rgba(11,25,60,0.06)]">
+<!-- Match Center -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="sports_cricket">sports_cricket</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Match Center</span>
+</a>
+<!-- Amenities -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Amenities</span>
+</a>
+<!-- Route -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="directions">directions</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Route</span>
+</a>
+<!-- Order (ACTIVE) -->
+<a class="flex flex-col items-center justify-center bg-[#222e52] text-white rounded-xl px-3 py-1.5 transition-all scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Order</span>
+</a>
+<!-- Alerts -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-all scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Alerts</span>
+</a>
+</nav>
+</body></html>

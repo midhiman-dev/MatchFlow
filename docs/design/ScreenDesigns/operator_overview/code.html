@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MatchFlow | Ops Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#f7f9fc",
+                    "outline-variant": "#c6c5d4",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#ffb5a0",
+                    "surface-bright": "#f7f9fc",
+                    "inverse-primary": "#b9c5f2",
+                    "on-tertiary-fixed-variant": "#004f4f",
+                    "outline": "#767683",
+                    "surface-dim": "#d8dadd",
+                    "on-tertiary-container": "#42a6a5",
+                    "primary-container": "#222e52",
+                    "on-secondary-fixed-variant": "#862200",
+                    "tertiary-fixed-dim": "#76d6d5",
+                    "on-surface-variant": "#454652",
+                    "surface-variant": "#e0e3e6",
+                    "primary-fixed-dim": "#b9c5f2",
+                    "on-tertiary-fixed": "#002020",
+                    "on-secondary-fixed": "#3b0900",
+                    "inverse-on-surface": "#eff1f4",
+                    "surface-container-low": "#f2f4f7",
+                    "on-primary": "#ffffff",
+                    "secondary": "#b02f00",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#541100",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary": "#ffffff",
+                    "secondary-container": "#ff5722",
+                    "surface-container-highest": "#e0e3e6",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#0b193c",
+                    "surface-container-high": "#e6e8eb",
+                    "error-container": "#ffdad6",
+                    "tertiary-container": "#003636",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-background": "#191c1e",
+                    "on-primary-container": "#8a96c0",
+                    "on-primary-fixed": "#0b1a3d",
+                    "surface-container": "#eceef1",
+                    "background": "#f7f9fc",
+                    "surface-tint": "#515d84",
+                    "on-surface": "#191c1e",
+                    "secondary-fixed": "#ffdbd1",
+                    "tertiary-fixed": "#93f2f2",
+                    "on-primary-fixed-variant": "#39456b",
+                    "primary-fixed": "#dbe1ff",
+                    "tertiary": "#001f1f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fc; }
+        .headline { font-family: 'Manrope', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .heat-map-overlay {
+            background: radial-gradient(circle at 30% 40%, rgba(186, 26, 26, 0.4) 0%, transparent 40%),
+                        radial-gradient(circle at 70% 60%, rgba(255, 87, 34, 0.3) 0%, transparent 35%),
+                        radial-gradient(circle at 50% 50%, rgba(66, 166, 165, 0.1) 0%, transparent 50%);
+        }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- Sidebar / NavigationDrawer -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#0b193c] flex flex-col h-full py-6 shadow-2xl shadow-blue-900/20 z-50 hidden md:flex">
+<div class="text-2xl font-black text-white px-6 py-8 headline tracking-tighter">MatchFlow</div>
+<nav class="flex-1">
+<div class="bg-[#ff5722] text-white rounded-r-full mr-4 pl-6 py-3 my-1 flex items-center gap-3 font-semibold text-sm cursor-pointer">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</div>
+<div class="text-slate-300 hover:text-white hover:bg-white/10 transition-colors pl-6 py-3 my-1 flex items-center gap-3 font-semibold text-sm cursor-pointer">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span>Zones</span>
+</div>
+<div class="text-slate-300 hover:text-white hover:bg-white/10 transition-colors pl-6 py-3 my-1 flex items-center gap-3 font-semibold text-sm cursor-pointer">
+<span class="material-symbols-outlined" data-icon="hub">hub</span>
+<span>Amenities</span>
+</div>
+<div class="text-slate-300 hover:text-white hover:bg-white/10 transition-colors pl-6 py-3 my-1 flex items-center gap-3 font-semibold text-sm cursor-pointer">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span>Alerts</span>
+</div>
+<div class="text-slate-300 hover:text-white hover:bg-white/10 transition-colors pl-6 py-3 my-1 flex items-center gap-3 font-semibold text-sm cursor-pointer">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>Simulator</span>
+</div>
+</nav>
+<div class="px-6 py-4">
+<button class="w-full bg-error text-white rounded-xl py-3 px-4 flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-widest hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm" data-icon="emergency" data-weight="fill" style="font-variation-settings: 'FILL' 1;">emergency</span>
+                EMERGENCY MODE
+            </button>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="md:ml-64 min-h-screen flex flex-col bg-surface-container-low">
+<!-- TopAppBar -->
+<header class="bg-white/80 backdrop-blur-xl sticky top-0 z-40 flex justify-between items-center w-full px-6 py-4">
+<div class="flex items-center gap-4">
+<div class="md:hidden text-primary font-black text-xl">MF</div>
+<h1 class="font-headline font-bold text-lg text-[#0b193c]">Operator Console</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden lg:flex flex-col items-end">
+<span class="text-[10px] font-bold text-secondary uppercase tracking-tighter">Current Scenario</span>
+<span class="text-sm font-bold text-primary">Innings Break Surge</span>
+</div>
+<div class="h-10 w-10 rounded-full bg-primary-container flex items-center justify-center text-white font-bold border-2 border-white shadow-sm overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="professional portrait of a stadium operations director in a control room setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_a4rwPvTJFueEkqwI5k6Cdj1u5ZDvwQoCSOrjJQlLLmLWS0YoYH9AqGK1ZT8WP2nTZMfSR4ucD7Ph6fMl2p0YbqSTaUysuvqqddw41JzfhaHGtIZj_u0-F_0wxOWChu_vQSNtN6DdRqxacrDeHRBbeiMjIL8O1sn9nO47InL6noR8liNtYMsjOtvGLQIz-o2ScWQxKHTI8LliluWfWi67HeS1zKxjo5IAOBLDA6oka2bzUsc8ume1L3npjva5thrEuWaPUbGA7uY"/>
+</div>
+<div class="hidden md:block">
+<div class="bg-tertiary-fixed/30 px-3 py-1 rounded-full flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-on-tertiary-container animate-pulse"></div>
+<span class="text-xs font-bold text-on-tertiary-container uppercase tracking-widest">Connected</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Area: Bento Grid Layout -->
+<div class="p-6 grid grid-cols-12 gap-6 flex-1">
+<!-- Key Metrics Bar -->
+<section class="col-span-12 grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_8px_32px_rgba(11,25,60,0.04)] flex flex-col gap-1">
+<span class="text-label-md text-outline font-bold uppercase text-[10px] tracking-widest">Total Live Fans</span>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-headline font-bold text-primary">42,850</span>
+<span class="text-xs font-bold text-secondary">+12%</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_8px_32px_rgba(11,25,60,0.04)] flex flex-col gap-1">
+<span class="text-label-md text-outline font-bold uppercase text-[10px] tracking-widest">Avg. Wait Time</span>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-headline font-bold text-primary">4.2<span class="text-lg">m</span></span>
+<span class="text-xs font-bold text-error">Critical</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_8px_32px_rgba(11,25,60,0.04)] flex flex-col gap-1 border-l-4 border-secondary">
+<span class="text-label-md text-secondary font-bold uppercase text-[10px] tracking-widest">Active Alerts</span>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-headline font-bold text-secondary">08</span>
+<span class="text-xs font-bold text-outline">Since Break</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_8px_32px_rgba(11,25,60,0.04)] flex flex-col gap-1">
+<span class="text-label-md text-outline font-bold uppercase text-[10px] tracking-widest">Staff Deployment</span>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-headline font-bold text-primary">94%</span>
+<span class="text-xs font-bold text-on-tertiary-container">Optimized</span>
+</div>
+</div>
+</section>
+<!-- Main Heatmap Canvas -->
+<section class="col-span-12 lg:col-span-8 bg-primary rounded-xl overflow-hidden relative shadow-2xl min-h-[500px]">
+<!-- Map Background -->
+<div class="absolute inset-0 z-0 opacity-40 grayscale">
+<img class="w-full h-full object-cover" data-alt="architectural schematic of a massive stadium layout from bird's eye view with glowing pathways" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs-3rZhkyN8sHLdsGyYhb_XOvmnP20_N7IZrUb9XhWWoG1N_JtfRON2u91k_hi1YU3VRQQNw2Ipyv7HYS3V5UT3CZi4GBlhupt6ZJhk6cN8U4uQ5lb6hs3AimxMHP_lb839I7AAab_yeBCqEKb_Cf9G1PwQFa4ey52LWS-1we4XeSWTZ2OYmPP9WPQUwI2lnOQxIwpttkSw4aC6viHfdVqLLk6n7tLH0Ey4i7sNLl__T6i379WqdZu2HLqBODOJAAD6rgNqkYOg4o"/>
+</div>
+<!-- Heat Overlay -->
+<div class="absolute inset-0 z-10 heat-map-overlay"></div>
+<!-- Interface Elements on Map -->
+<div class="absolute top-4 left-4 z-20 flex gap-2">
+<button class="bg-white/10 backdrop-blur-md text-white px-4 py-2 rounded-lg text-xs font-bold border border-white/10 hover:bg-white/20 transition-all">ZOOM +</button>
+<button class="bg-white/10 backdrop-blur-md text-white px-4 py-2 rounded-lg text-xs font-bold border border-white/10 hover:bg-white/20 transition-all">ZOOM -</button>
+</div>
+<div class="absolute bottom-6 left-6 z-20">
+<div class="bg-primary/80 backdrop-blur-md p-4 rounded-xl border border-white/10">
+<div class="text-[10px] font-bold text-blue-400 uppercase tracking-widest mb-2">Heat Legend</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-[#42a6a5]"></div>
+<span class="text-[10px] text-white">Low</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-secondary-container"></div>
+<span class="text-[10px] text-white">Medium</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-error"></div>
+<span class="text-[10px] text-white">High</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Data Chips -->
+<div class="absolute top-[30%] left-[25%] z-30">
+<div class="bg-error text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-lg flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="person_alert">person_alert</span>
+                        NORTH GATE: OVERFLOW
+                    </div>
+</div>
+<div class="absolute bottom-[40%] right-[30%] z-30">
+<div class="bg-secondary-container text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-lg flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" data-icon="restaurant">restaurant</span>
+                        FOOD COURT B: BUSY
+                    </div>
+</div>
+</section>
+<!-- Sidebar Info Panel -->
+<aside class="col-span-12 lg:col-span-4 flex flex-col gap-6">
+<!-- Top Hotspots -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_8px_32px_rgba(11,25,60,0.04)]">
+<h3 class="text-lg font-headline font-bold text-primary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="local_fire_department">local_fire_department</span>
+                        Top Hotspots
+                    </h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 bg-error/5 rounded-lg">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-primary">North Concourse</span>
+<span class="text-[10px] text-error font-black uppercase tracking-tighter">HIGH PRESSURE</span>
+</div>
+<div class="text-right">
+<div class="text-xs font-bold text-primary">Est. 4,200/min</div>
+<div class="w-24 h-1.5 bg-error-container rounded-full mt-1 overflow-hidden">
+<div class="w-[92%] h-full bg-error"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 bg-secondary-container/5 rounded-lg">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-primary">Gate 4 Entrance</span>
+<span class="text-[10px] text-secondary font-black uppercase tracking-tighter">CONGESTED</span>
+</div>
+<div class="text-right">
+<div class="text-xs font-bold text-primary">Est. 1,850/min</div>
+<div class="w-24 h-1.5 bg-secondary-fixed rounded-full mt-1 overflow-hidden">
+<div class="w-[65%] h-full bg-secondary"></div>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container rounded-lg">
+<div class="flex flex-col">
+<span class="text-sm font-bold text-primary">VIP East Lounge</span>
+<span class="text-[10px] text-on-tertiary-container font-black uppercase tracking-tighter">STABLE</span>
+</div>
+<div class="text-right">
+<div class="text-xs font-bold text-primary">Est. 420/min</div>
+<div class="w-24 h-1.5 bg-outline-variant rounded-full mt-1 overflow-hidden">
+<div class="w-[20%] h-full bg-tertiary-container"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Analysis / Live Log -->
+<div class="bg-[#0b193c] text-white p-6 rounded-xl shadow-xl flex-1 flex flex-col">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-headline font-bold text-white uppercase text-xs tracking-widest">Live Activity Log</h3>
+<span class="text-[10px] font-bold text-blue-400">REAL-TIME</span>
+</div>
+<div class="flex-1 space-y-4 overflow-y-auto max-h-[200px] pr-2">
+<div class="text-[11px] border-l-2 border-secondary pl-3">
+<div class="text-slate-400">14:42:01</div>
+<div class="font-semibold text-white">Elevated movement detected in Sector G. Deploying additional staff.</div>
+</div>
+<div class="text-[11px] border-l-2 border-error pl-3">
+<div class="text-slate-400">14:41:45</div>
+<div class="font-semibold text-white">Medical assistance requested at Stand 12B. EMS dispatching.</div>
+</div>
+<div class="text-[11px] border-l-2 border-tertiary pl-3">
+<div class="text-slate-400">14:40:12</div>
+<div class="font-semibold text-white">Maintenance report: Zone 4 water station restored.</div>
+</div>
+</div>
+<div class="mt-6">
+<div class="bg-white/10 rounded-xl p-3 flex items-center gap-3">
+<input class="bg-transparent border-none text-xs text-white placeholder-slate-400 focus:ring-0 w-full" placeholder="Command assistant..." type="text"/>
+<span class="material-symbols-outlined text-blue-400 cursor-pointer" data-icon="send">send</span>
+</div>
+</div>
+</div>
+</aside>
+</div>
+<div class="h-16 md:hidden"></div> <!-- Spacer for mobile nav -->
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl z-50 rounded-t-xl shadow-[0_-8px_32px_rgba(11,25,60,0.06)]">
+<div class="flex flex-col items-center justify-center bg-[#222e52] text-white rounded-xl px-3 py-1.5 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="sports_cricket">sports_cricket</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Match Center</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Amenities</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined" data-icon="directions">directions</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Route</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Order</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Alerts</span>
+</div>
+</nav>
+</body></html>

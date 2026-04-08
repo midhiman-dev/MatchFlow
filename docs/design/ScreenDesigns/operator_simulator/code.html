@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>O-07 Simulator Control | MatchFlow</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fc",
+                        "outline-variant": "#c6c5d4",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#ffb5a0",
+                        "surface-bright": "#f7f9fc",
+                        "inverse-primary": "#b9c5f2",
+                        "on-tertiary-fixed-variant": "#004f4f",
+                        "outline": "#767683",
+                        "surface-dim": "#d8dadd",
+                        "on-tertiary-container": "#42a6a5",
+                        "primary-container": "#222e52",
+                        "on-secondary-fixed-variant": "#862200",
+                        "tertiary-fixed-dim": "#76d6d5",
+                        "on-surface-variant": "#454652",
+                        "surface-variant": "#e0e3e6",
+                        "primary-fixed-dim": "#b9c5f2",
+                        "on-tertiary-fixed": "#002020",
+                        "on-secondary-fixed": "#3b0900",
+                        "inverse-on-surface": "#eff1f4",
+                        "surface-container-low": "#f2f4f7",
+                        "on-primary": "#ffffff",
+                        "secondary": "#b02f00",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#541100",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#ff5722",
+                        "surface-container-highest": "#e0e3e6",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#0b193c",
+                        "surface-container-high": "#e6e8eb",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#003636",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-primary-container": "#8a96c0",
+                        "on-primary-fixed": "#0b1a3d",
+                        "surface-container": "#eceef1",
+                        "background": "#f7f9fc",
+                        "surface-tint": "#515d84",
+                        "on-surface": "#191c1e",
+                        "secondary-fixed": "#ffdbd1",
+                        "tertiary-fixed": "#93f2f2",
+                        "on-primary-fixed-variant": "#39456b",
+                        "primary-fixed": "#dbe1ff",
+                        "tertiary": "#001f1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-surface-container-low text-on-surface">
+<!-- NavigationDrawer -->
+<aside class="h-screen w-64 fixed left-0 top-0 bg-[#0b193c] flex flex-col h-full py-6 shadow-2xl shadow-blue-900/20 z-50 hidden md:flex">
+<div class="text-2xl font-black text-white px-6 py-8">MatchFlow</div>
+<nav class="flex-1">
+<div class="text-slate-300 hover:text-white pl-6 py-3 my-1 flex items-center gap-3 transition-colors hover:bg-white/10 font-semibold text-sm">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</div>
+<div class="text-slate-300 hover:text-white pl-6 py-3 my-1 flex items-center gap-3 transition-colors hover:bg-white/10 font-semibold text-sm">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span>Zones</span>
+</div>
+<div class="text-slate-300 hover:text-white pl-6 py-3 my-1 flex items-center gap-3 transition-colors hover:bg-white/10 font-semibold text-sm">
+<span class="material-symbols-outlined" data-icon="hub">hub</span>
+<span>Amenities</span>
+</div>
+<div class="text-slate-300 hover:text-white pl-6 py-3 my-1 flex items-center gap-3 transition-colors hover:bg-white/10 font-semibold text-sm">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span>Alerts</span>
+</div>
+<div class="bg-[#ff5722] text-white rounded-r-full mr-4 pl-6 py-3 my-1 flex items-center gap-3 transition-all duration-300 ease-in-out font-semibold text-sm">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>Simulator</span>
+</div>
+<div class="text-slate-300 hover:text-white pl-6 py-3 my-1 flex items-center gap-3 transition-colors hover:bg-white/10 font-semibold text-sm">
+<span class="material-symbols-outlined" data-icon="emergency">emergency</span>
+<span>Emergency</span>
+</div>
+</nav>
+</aside>
+<!-- Main Canvas -->
+<main class="md:ml-64 min-h-screen pb-24 md:pb-8">
+<!-- TopAppBar -->
+<header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex justify-between items-center w-full px-6 py-4 sticky top-0 z-40">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold">JD</div>
+<h1 class="text-xl font-bold tracking-tighter text-[#0b193c] dark:text-white">Operator Console</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden sm:flex items-center gap-2 text-slate-500 font-medium">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span>System Online</span>
+</div>
+<button class="bg-secondary-container text-on-secondary-container px-4 py-2 rounded-xl font-bold text-sm transition-opacity duration-200 hover:opacity-80">
+                    Connected
+                </button>
+</div>
+</header>
+<div class="max-w-7xl mx-auto px-6 py-8">
+<!-- Hero Status HUD -->
+<section class="mb-10">
+<div class="relative overflow-hidden rounded-xl bg-primary p-8 text-white shadow-2xl shadow-primary/10">
+<div class="absolute top-0 right-0 p-8 opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="analytics">analytics</span>
+</div>
+<div class="relative z-10">
+<div class="flex items-center gap-3 mb-2">
+<span class="bg-secondary px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase">Live Simulation</span>
+<span class="text-on-primary-container text-sm font-semibold tracking-wide">ID: SIM-O07-ALPHA</span>
+</div>
+<h2 class="text-4xl md:text-5xl font-bold mb-4 tracking-tight">Wicket Surge Active</h2>
+<p class="text-on-primary-container max-w-lg text-lg leading-relaxed mb-6">
+                            Monitoring South Stand congestion spikes. Crowd density currently at 84% in Sector 4B. Automated flow directives deployed to Stewards 12-18.
+                        </p>
+<div class="flex gap-4">
+<button class="bg-white text-primary px-6 py-3 rounded-xl font-bold hover:bg-slate-100 transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="restart_alt">restart_alt</span>
+                                Reset Environment
+                            </button>
+<button class="bg-secondary-container text-on-secondary-container px-6 py-3 rounded-xl font-bold hover:opacity-90 transition-opacity">
+                                View Heatmap
+                            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Scenario Selection Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Innings Break Rush -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm group hover:shadow-xl transition-shadow duration-300">
+<div class="w-12 h-12 bg-tertiary-fixed-dim rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-on-tertiary-fixed" data-icon="fastfood">fastfood</span>
+</div>
+<h3 class="text-xl font-bold text-primary mb-2">Innings Break Rush</h3>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">Simulates 35,000 fans moving to concourse areas for F&amp;B and restrooms within a 15-minute window.</p>
+<button class="w-full bg-surface-container-high py-3 rounded-xl text-primary font-bold hover:bg-primary hover:text-white transition-all">
+                        Trigger Scenario
+                    </button>
+</div>
+<!-- DRS Spike -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm group hover:shadow-xl transition-shadow duration-300">
+<div class="w-12 h-12 bg-tertiary-fixed-dim rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-on-tertiary-fixed" data-icon="network_check">network_check</span>
+</div>
+<h3 class="text-xl font-bold text-primary mb-2">DRS Spike</h3>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">Simulates massive concurrent network requests during a controversial DRS review. Tests Wi-Fi load balancing.</p>
+<button class="w-full bg-surface-container-high py-3 rounded-xl text-primary font-bold hover:bg-primary hover:text-white transition-all">
+                        Trigger Scenario
+                    </button>
+</div>
+<!-- Wicket Surge (Active State) -->
+<div class="bg-secondary-container/5 ring-2 ring-secondary p-6 rounded-xl shadow-xl relative overflow-hidden">
+<div class="absolute top-2 right-2">
+<span class="bg-secondary text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase">Active</span>
+</div>
+<div class="w-12 h-12 bg-secondary rounded-xl flex items-center justify-center mb-6 text-white">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+</div>
+<h3 class="text-xl font-bold text-primary mb-2">Wicket Surge</h3>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">Sudden vertical movement and congestion as fans celebrate and reposition for better views.</p>
+<button class="w-full bg-secondary text-white py-3 rounded-xl font-bold cursor-default">
+                        Scenario Running...
+                    </button>
+</div>
+<!-- End-of-match Exit -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm group hover:shadow-xl transition-shadow duration-300">
+<div class="w-12 h-12 bg-tertiary-fixed-dim rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-on-tertiary-fixed" data-icon="exit_to_app">exit_to_app</span>
+</div>
+<h3 class="text-xl font-bold text-primary mb-2">End-of-match Exit</h3>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">Phased egress simulation for all 60,000 spectators toward public transport hubs and parking lots.</p>
+<button class="w-full bg-surface-container-high py-3 rounded-xl text-primary font-bold hover:bg-primary hover:text-white transition-all">
+                        Trigger Scenario
+                    </button>
+</div>
+<!-- Emergency Closure -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm group hover:shadow-xl transition-shadow duration-300">
+<div class="w-12 h-12 bg-error-container rounded-xl flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-on-error-container" data-icon="report">report</span>
+</div>
+<h3 class="text-xl font-bold text-primary mb-2">Emergency Closure</h3>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">Full stadium evacuation protocol. Priority routing to assembly points and PA system override.</p>
+<button class="w-full bg-error text-white py-3 rounded-xl font-bold hover:bg-red-800 transition-all">
+                        Trigger Scenario
+                    </button>
+</div>
+<!-- Custom Scenario -->
+<div class="border-2 border-dashed border-outline-variant p-6 rounded-xl flex flex-col items-center justify-center text-center group cursor-pointer hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-4xl text-outline mb-2 group-hover:text-primary" data-icon="add_circle">add_circle</span>
+<span class="font-bold text-primary">Create Scenario</span>
+<span class="text-xs text-on-surface-variant">Define custom variables</span>
+</div>
+</section>
+<!-- Detailed Impact Log (Asymmetric Layout) -->
+<section class="mt-12 grid grid-cols-1 lg:grid-cols-4 gap-8">
+<div class="lg:col-span-3 space-y-4">
+<h4 class="text-lg font-bold text-primary flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="list_alt">list_alt</span>
+                        Live Impact Log
+                    </h4>
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<table class="w-full text-left">
+<thead class="bg-surface-container-high text-on-surface-variant text-[10px] font-bold uppercase tracking-widest">
+<tr>
+<th class="px-6 py-4">Timestamp</th>
+<th class="px-6 py-4">Sector</th>
+<th class="px-6 py-4">Observation</th>
+<th class="px-6 py-4">Impact Score</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container-low">
+<tr>
+<td class="px-6 py-4 text-xs font-medium">14:02:11</td>
+<td class="px-6 py-4 font-bold text-sm">Sector 4B</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Density surge detected after wicket event.</td>
+<td class="px-6 py-4">
+<span class="bg-orange-100 text-orange-800 px-2 py-1 rounded-full text-[10px] font-bold">High</span>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 text-xs font-medium">14:01:58</td>
+<td class="px-6 py-4 font-bold text-sm">Main concourse</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Pre-emptive kiosk staffing increased by 20%.</td>
+<td class="px-6 py-4">
+<span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-[10px] font-bold">Optimal</span>
+</td>
+</tr>
+<tr>
+<td class="px-6 py-4 text-xs font-medium">14:01:45</td>
+<td class="px-6 py-4 font-bold text-sm">East Gate 2</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant">Elevated camera tracking activity for flow analysis.</td>
+<td class="px-6 py-4">
+<span class="bg-slate-100 text-slate-800 px-2 py-1 rounded-full text-[10px] font-bold">Monitor</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="lg:col-span-1 space-y-6">
+<div class="bg-primary text-white p-6 rounded-xl shadow-lg">
+<h4 class="font-bold mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="bolt">bolt</span>
+                            System Health
+                        </h4>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span>Server Latency</span>
+<span>24ms</span>
+</div>
+<div class="w-full bg-white/20 h-1.5 rounded-full">
+<div class="bg-emerald-400 h-full w-[85%] rounded-full"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs mb-1">
+<span>Edge Processing</span>
+<span>92%</span>
+</div>
+<div class="w-full bg-white/20 h-1.5 rounded-full">
+<div class="bg-secondary-container h-full w-[92%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-highest p-6 rounded-xl">
+<h4 class="font-bold text-primary mb-2">Sim Variable Control</h4>
+<p class="text-xs text-on-surface-variant mb-4">Live crowd scaling factor: 1.2x</p>
+<input class="w-full accent-secondary mb-4" type="range"/>
+<button class="w-full bg-primary text-white py-2 rounded-lg text-sm font-bold">Update Multiplier</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl z-50 rounded-t-xl shadow-[0_-8px_32px_rgba(11,25,60,0.06)]">
+<div class="flex flex-col items-center justify-center text-slate-500 px-3 py-1.5 hover:bg-slate-100">
+<span class="material-symbols-outlined" data-icon="sports_cricket">sports_cricket</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Match Center</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 px-3 py-1.5 hover:bg-slate-100">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Amenities</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 px-3 py-1.5 hover:bg-slate-100">
+<span class="material-symbols-outlined" data-icon="directions">directions</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Route</span>
+</div>
+<div class="flex flex-col items-center justify-center bg-[#222e52] text-white rounded-xl px-3 py-1.5">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Simulator</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 px-3 py-1.5 hover:bg-slate-100">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider">Alerts</span>
+</div>
+</nav>
+</body></html>

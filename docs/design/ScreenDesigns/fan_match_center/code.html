@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MatchFlow - Match Center</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f7f9fc",
+                        "outline-variant": "#c6c5d4",
+                        "error": "#ba1a1a",
+                        "secondary-fixed-dim": "#ffb5a0",
+                        "surface-bright": "#f7f9fc",
+                        "inverse-primary": "#b9c5f2",
+                        "on-tertiary-fixed-variant": "#004f4f",
+                        "outline": "#767683",
+                        "surface-dim": "#d8dadd",
+                        "on-tertiary-container": "#42a6a5",
+                        "primary-container": "#222e52",
+                        "on-secondary-fixed-variant": "#862200",
+                        "tertiary-fixed-dim": "#76d6d5",
+                        "on-surface-variant": "#454652",
+                        "surface-variant": "#e0e3e6",
+                        "primary-fixed-dim": "#b9c5f2",
+                        "on-tertiary-fixed": "#002020",
+                        "on-secondary-fixed": "#3b0900",
+                        "inverse-on-surface": "#eff1f4",
+                        "surface-container-low": "#f2f4f7",
+                        "on-primary": "#ffffff",
+                        "secondary": "#b02f00",
+                        "on-error-container": "#93000a",
+                        "on-secondary-container": "#541100",
+                        "inverse-surface": "#2d3133",
+                        "on-secondary": "#ffffff",
+                        "secondary-container": "#ff5722",
+                        "surface-container-highest": "#e0e3e6",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#0b193c",
+                        "surface-container-high": "#e6e8eb",
+                        "error-container": "#ffdad6",
+                        "tertiary-container": "#003636",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-background": "#191c1e",
+                        "on-primary-container": "#8a96c0",
+                        "on-primary-fixed": "#0b1a3d",
+                        "surface-container": "#eceef1",
+                        "background": "#f7f9fc",
+                        "surface-tint": "#515d84",
+                        "on-surface": "#191c1e",
+                        "secondary-fixed": "#ffdbd1",
+                        "tertiary-fixed": "#93f2f2",
+                        "on-primary-fixed-variant": "#39456b",
+                        "primary-fixed": "#dbe1ff",
+                        "tertiary": "#001f1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .score-gradient {
+            background: linear-gradient(135deg, #0b193c 0%, #222e52 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-low font-body text-on-surface antialiased">
+<!-- TopAppBar from Shared Components -->
+<header class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl docked full-width top-0 z-50 fixed w-full">
+<div class="flex justify-between items-center w-full px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center overflow-hidden">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Close up portrait of a young man with a friendly expression, professional studio lighting, blurred bokeh background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWxvsu7l99mkF3J9KGQW0sJdrlEUbFpw3GeTS83-GiYwF33kaM-VRtkW7pdBlsAxsCIaEovaAVLRgLEi2n9wOLYV6TGT5WEo_Ry7FRrzb8E45S2LkkmXDuxqbjrkAofTNhVXV9iNLzzGuseRoruP2VEXFY_VN1ZB2vffOARhwThRAiJRkOA5cVke34wAH2MrSEJgcF5W8e_0KjedXhTp_poA_Qa1IiXHZaTCXRURHvXrXz8S2K8dk4IsBXQadhdOJ5Of4qfEpFJec"/>
+</div>
+<h1 class="text-xl font-bold tracking-tighter text-[#0b193c] dark:text-white font-headline">MatchFlow</h1>
+</div>
+<div class="flex items-center gap-2 px-3 py-1 bg-tertiary-fixed rounded-full">
+<span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-tertiary-fixed">Connected</span>
+</div>
+</div>
+</header>
+<main class="pt-24 pb-32 px-4 max-w-md mx-auto space-y-6">
+<!-- Live Score Snippet (The Anchor) -->
+<section class="score-gradient rounded-[2rem] p-6 text-white shadow-2xl shadow-primary/20 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4">
+<div class="bg-secondary-container text-on-secondary-container px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-tighter flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">fiber_manual_record</span>
+                    LIVE
+                </div>
+</div>
+<div class="flex justify-between items-center mb-4 pt-2">
+<div class="flex flex-col items-center gap-2">
+<div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center p-2">
+<img alt="India" class="w-full h-full object-contain" data-alt="India national flag colors and patterns abstract design, vibrant saffron, white and green" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDSdBA-MjJGR1joF9Bhobj-Do0i_6_3g8D_iH0kAqZzKnYk06Hf-7-egAuXeVpwHlOGvrsfVEDm6EmgoR9mlKPXOZxmHKEhFyC675qflZEULlNI_FBIbVfV_M7iHtdLZb_PacPf1xXgrUKQz_jbevfI-pBPzNMN1xrxLZpxd9Y4CIf2COK1_F3IGMJtOrzL0sKPKWwmqMfnqDMcFl-Iylri1E6LSs3fREz8bNfjlNV-b397CFPme1xt9wEjzGYOm76Z3puxWqvYjY"/>
+</div>
+<span class="font-headline font-bold text-sm tracking-wide">IND</span>
+</div>
+<div class="flex flex-col items-center">
+<div class="text-xs font-bold text-on-primary-container uppercase tracking-widest mb-1">Session 2</div>
+<div class="text-4xl font-headline font-extrabold tracking-tighter">184/4</div>
+<div class="text-[10px] opacity-70 font-semibold mt-1">32.4 OVERS</div>
+</div>
+<div class="flex flex-col items-center gap-2">
+<div class="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center p-2">
+<img alt="Australia" class="w-full h-full object-contain" data-alt="Australia national flag abstract design, deep blue with stars and union jack patterns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBxCe_gkLmRySw0F8Qt8aqGCl84oWFNHb-q7x6tNrAMnrYiJeFns2ASjAuMVvqFIph4ykgaegeMfiVYzr3a9sfHWx2bIjgSFQjTEsB_HV-hGDrXltJt_ouBwnrLH9vkIrKcAWw3HWLUpQrC_8iHbvkb2g6kcq3WKm259oPdB6JGy-LvA_tYRjVcXJ6Q_mGfY_G_da_XWqo4-0WKN9KG6beXgk8mgyEtmKKKgzQIqyW7Vk1mXU2sveXBdKZeAdoviYSyyIPlneGxu2I"/>
+</div>
+<span class="font-headline font-bold text-sm tracking-wide">AUS</span>
+</div>
+</div>
+<div class="bg-white/5 rounded-2xl p-3 flex justify-between items-center">
+<div class="flex flex-col">
+<span class="text-[10px] text-on-primary-container font-bold uppercase">Batter</span>
+<span class="text-sm font-bold">V. Kohli* <span class="text-secondary-container">54(42)</span></span>
+</div>
+<div class="h-8 w-px bg-white/10"></div>
+<div class="flex flex-col items-end">
+<span class="text-[10px] text-on-primary-container font-bold uppercase">Bowler</span>
+<span class="text-sm font-bold">P. Cummins <span class="opacity-60">1/38</span></span>
+</div>
+</div>
+</section>
+<!-- Freshness Pill -->
+<div class="flex justify-center">
+<div class="bg-surface-container-highest text-on-surface-variant px-4 py-1.5 rounded-full text-[10px] font-bold flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined text-[14px]">sync</span>
+                Updated 20s ago
+            </div>
+</div>
+<!-- Bento Grid Section -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Seat Info Card -->
+<div class="bg-surface-container-lowest rounded-3xl p-5 flex flex-col justify-between shadow-sm border border-outline-variant/10">
+<div class="flex items-center gap-2 mb-4">
+<div class="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="chair">chair</span>
+</div>
+<span class="text-[10px] font-black uppercase tracking-wider text-outline">Your Seat</span>
+</div>
+<div>
+<div class="text-2xl font-headline font-extrabold text-primary">Row 12</div>
+<div class="text-xs font-bold text-on-surface-variant">North Stand • Block G</div>
+</div>
+</div>
+<!-- Smart Next Action -->
+<div class="col-span-1 bg-secondary-container rounded-3xl p-5 flex flex-col justify-between shadow-lg shadow-secondary/20 relative overflow-hidden">
+<div class="absolute -right-2 -top-2 opacity-10">
+<span class="material-symbols-outlined text-[80px]" data-icon="restaurant">restaurant</span>
+</div>
+<div class="z-10">
+<div class="text-[10px] font-black uppercase tracking-wider text-on-secondary-container/70 mb-2">Pro Tip</div>
+<p class="text-xs font-bold text-on-secondary-container leading-tight">Innings break in 5 mins: Order snacks now to skip the rush.</p>
+</div>
+<button class="mt-4 bg-on-secondary-container text-white text-[10px] font-bold uppercase py-2 px-4 rounded-xl w-fit z-10">
+                    Pre-Order
+                </button>
+</div>
+<!-- Queue Status Bento Large -->
+<div class="col-span-2 bg-surface-container-lowest rounded-3xl p-6 shadow-sm border border-outline-variant/10">
+<h3 class="font-headline font-bold text-primary mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary">speed</span>
+                    Nearby Services
+                </h3>
+<div class="space-y-4">
+<!-- Snack Bar -->
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-surface-container overflow-hidden">
+<img alt="Pizza Shop" class="w-full h-full object-cover" data-alt="Overhead view of a hot delicious pizza slice in a stadium food court, warm vibrant lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIY01w12EnqpJjAWsW6vBiPqcwvn76oKmHaxec6HMYTo-t7kdz1CnacWDvHHf6hJrC_DnyaEjB4SMbQI8O_xSL6R3k2MZiUe5leZxtwEYq8skGODnTOgXyFH4y-0zUxb5WpQk77co4jQr3LeMYVGweqHX_wzyJH58VnyDmYn6QNpogw4Xk7RYvbBeBrMQAUjgmBomBbK-Y3gir0FezXb9nLhvnqA6CV2l2FAK0JOlGetbre9k9zBAAfDw2tICuxlqpL_zWRCfnh2Y"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<span class="text-sm font-bold">Boundary Bites (Level 2)</span>
+<span class="text-xs font-bold text-secondary">~12 min wait</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-secondary h-full w-[70%]"></div>
+</div>
+</div>
+</div>
+<!-- Washroom -->
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-2xl bg-surface-container flex items-center justify-center">
+<span class="material-symbols-outlined text-outline" data-icon="wc">wc</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<span class="text-sm font-bold">Washroom (Block G East)</span>
+<span class="text-xs font-bold text-on-tertiary-container">Low Traffic</span>
+</div>
+<div class="w-full h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="bg-on-tertiary-container h-full w-[20%]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Interactive Map Snippet -->
+<div class="col-span-2 relative h-48 rounded-[2rem] overflow-hidden shadow-sm">
+<img alt="Stadium Map" class="w-full h-full object-cover" data-alt="Highly detailed architectural floor plan of a modern sports stadium with vibrant color coded zones" data-location="London" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbJ5yxoHEYDP_5jsjVHL2gqdsCLMgvBN0vBwcAZuQO6OcDSFcpRa5bZyPgnOFdiWX4B-qIb59Aivgyeki8T0D1TkrQl2fD0KWdrpjvlduBx-J6v7MurU-9KzaPn0Lir11FMkIbevAFLDfChIZLa9MYsKEBzxHtGipOuLCRFPue45vLAimIkJVXLMtjL_KZz1ulV8Tb59SpRlHH6Pdhg9NI2CC98nFx_ROBXpDLVKnj6ybV8IEgtY5mi2RDPK1DJ-v-sUk8BfB2qsg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+<div class="absolute bottom-4 left-4 right-4 flex justify-between items-end">
+<div>
+<div class="text-[10px] font-bold text-white/70 uppercase">Current Location</div>
+<div class="text-sm font-bold text-white">North Stand Entrance</div>
+</div>
+<button class="bg-white text-primary px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">explore</span>
+                        Explore Map
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar from Shared Components -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-t-xl shadow-[0_-8px_32px_rgba(11,25,60,0.06)] z-50">
+<!-- Match Center - ACTIVE -->
+<a class="flex flex-col items-center justify-center bg-[#222e52] text-white rounded-xl px-3 py-1.5 scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="sports_cricket">sports_cricket</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Match Center</span>
+</a>
+<!-- Amenities -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Amenities</span>
+</a>
+<!-- Route -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="directions">directions</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Route</span>
+</a>
+<!-- Order -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Order</span>
+</a>
+<!-- Alerts -->
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 scale-95 active:transition-transform relative" href="#">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Alerts</span>
+<span class="absolute top-1 right-3 w-2 h-2 bg-secondary rounded-full border-2 border-white"></span>
+</a>
+</nav>
+</body></html>

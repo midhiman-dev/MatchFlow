@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&amp;family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface": "#f7f9fc",
+                    "outline-variant": "#c6c5d4",
+                    "error": "#ba1a1a",
+                    "secondary-fixed-dim": "#ffb5a0",
+                    "surface-bright": "#f7f9fc",
+                    "inverse-primary": "#b9c5f2",
+                    "on-tertiary-fixed-variant": "#004f4f",
+                    "outline": "#767683",
+                    "surface-dim": "#d8dadd",
+                    "on-tertiary-container": "#42a6a5",
+                    "primary-container": "#222e52",
+                    "on-secondary-fixed-variant": "#862200",
+                    "tertiary-fixed-dim": "#76d6d5",
+                    "on-surface-variant": "#454652",
+                    "surface-variant": "#e0e3e6",
+                    "primary-fixed-dim": "#b9c5f2",
+                    "on-tertiary-fixed": "#002020",
+                    "on-secondary-fixed": "#3b0900",
+                    "inverse-on-surface": "#eff1f4",
+                    "surface-container-low": "#f2f4f7",
+                    "on-primary": "#ffffff",
+                    "secondary": "#b02f00",
+                    "on-error-container": "#93000a",
+                    "on-secondary-container": "#541100",
+                    "inverse-surface": "#2d3133",
+                    "on-secondary": "#ffffff",
+                    "secondary-container": "#ff5722",
+                    "surface-container-highest": "#e0e3e6",
+                    "surface-container-lowest": "#ffffff",
+                    "primary": "#0b193c",
+                    "surface-container-high": "#e6e8eb",
+                    "error-container": "#ffdad6",
+                    "tertiary-container": "#003636",
+                    "on-tertiary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-background": "#191c1e",
+                    "on-primary-container": "#8a96c0",
+                    "on-primary-fixed": "#0b1a3d",
+                    "surface-container": "#eceef1",
+                    "background": "#f7f9fc",
+                    "surface-tint": "#515d84",
+                    "on-surface": "#191c1e",
+                    "secondary-fixed": "#ffdbd1",
+                    "tertiary-fixed": "#93f2f2",
+                    "on-primary-fixed-variant": "#39456b",
+                    "primary-fixed": "#dbe1ff",
+                    "tertiary": "#001f1f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Manrope"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface-container-low font-body text-on-surface antialiased">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl flex justify-between items-center w-full px-6 py-4 transition-opacity duration-200">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="close up headshot of a professional male security steward in a uniform looking focused and helpful" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4nYksKpDVO1kWsuObSSshFo8BI0PGyiAGYKFm_j4B6mPMADEPQIPRWteIEBoeY18M5q1v7PV8Jj5zKHA1d-6d4kDqCFHsS4sc7052p2jcOOEV7n9G-bsMo4P6z381-y7yxMFAkYEfkYRNZVbNIt10EEyM1UDbRoioVuID3e2ljFIfoESBHCN2BEiYvsLuNbK4p9HLb4RAcpdGqoTFNV0eZR8l7NpI5V36CmeMaMkmlRrVVWtKNjAZI5eWbE1aS9jXKS2GQoitA_o"/>
+</div>
+<span class="font-headline font-bold text-lg text-[#0b193c] dark:text-blue-400">MatchFlow</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-tertiary-fixed animate-pulse"></span>
+<span class="font-headline font-bold text-[#0b193c] text-sm uppercase tracking-widest">Connected</span>
+</div>
+</header>
+<main class="pt-24 pb-32 px-4 max-w-md mx-auto">
+<!-- Live Alert Status -->
+<div class="mb-6 flex items-center justify-between bg-secondary-container/10 p-4 rounded-xl">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined font-bold" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="font-label text-xs uppercase tracking-widest font-bold">Priority Instruction</span>
+</div>
+<span class="text-on-surface-variant text-xs font-semibold">14:02:45</span>
+</div>
+<!-- Primary Task Card -->
+<div class="bg-surface-container-lowest rounded-[2rem] p-8 shadow-[0_8px_32px_rgba(11,25,60,0.04)] mb-6">
+<span class="font-label text-xs uppercase tracking-[0.2em] text-on-surface-variant font-bold block mb-4">Current Task</span>
+<h1 class="font-headline text-4xl font-extrabold text-primary leading-tight tracking-tighter mb-8">
+                Divert Traffic to Gate D
+            </h1>
+<div class="space-y-6">
+<div class="flex items-start gap-4 p-4 rounded-2xl bg-surface-container-low">
+<div class="p-3 rounded-xl bg-primary text-white">
+<span class="material-symbols-outlined">map</span>
+</div>
+<div>
+<span class="font-label text-[10px] uppercase tracking-wider text-on-surface-variant font-bold">Affected Area</span>
+<p class="font-headline font-bold text-lg text-primary">South Concourse</p>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 rounded-2xl bg-secondary-container/10">
+<div class="p-3 rounded-xl bg-secondary text-white">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">groups</span>
+</div>
+<div>
+<span class="font-label text-[10px] uppercase tracking-wider text-secondary font-bold">Live Crowd Level</span>
+<p class="font-headline font-bold text-lg text-secondary">High Density</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Instruction Map Overlay/Context -->
+<div class="relative rounded-[2rem] h-48 overflow-hidden mb-8 shadow-sm">
+<img class="w-full h-full object-cover grayscale opacity-50" data-alt="aerial perspective of a modern cricket stadium concourse showing architectural paths and pedestrian flow zones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCI43JSNU274I3S6CFyfYYXOvR-Pk1TVjTHV0weh0Ws6RBgd62mSXcbWNs4aEMgm7i_AaeSWtbS-6eU6ZG-pwDxk13g-9PiLgoBfTF7uovTqQwzMuOgIg8lEtgM-tduFbPohU_BIv04W1L98CJbLiBihO0qqu-u-FShr3KLOcjX93MrxM1D00bnPPj-g6XP7PHA7LxZPmhDSiYuxioUyPMJbT-PmDarKm_Ldgv9dRfRgMR7jNrBr-FJKiH9piLh3nfu_7yF4dm4iZE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+<div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+<div class="text-white">
+<p class="text-[10px] font-bold uppercase tracking-widest opacity-80">Reference Location</p>
+<p class="font-headline font-bold">South Gate Access Point</p>
+</div>
+<div class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-white text-[10px] font-bold">
+                    ID: SECT-04
+                </div>
+</div>
+</div>
+<!-- Action Grid -->
+<div class="grid grid-cols-2 gap-4">
+<button class="bg-surface-container-highest text-primary font-headline font-bold py-6 rounded-2xl active:scale-95 transition-transform flex flex-col items-center justify-center gap-2">
+<span class="material-symbols-outlined">refresh</span>
+<span>Refresh</span>
+</button>
+<button class="bg-[#ff5722] text-white font-headline font-extrabold py-6 rounded-2xl shadow-lg shadow-orange-500/20 active:scale-95 transition-transform flex flex-col items-center justify-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Acknowledge</span>
+</button>
+</div>
+</main>
+<!-- Navigation Footer -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center px-4 pb-6 pt-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl z-50 rounded-t-xl shadow-[0_-8px_32px_rgba(11,25,60,0.06)]">
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="sports_cricket">sports_cricket</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Match Center</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="storefront">storefront</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Amenities</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="directions">directions</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Route</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Order</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#222e52] text-white rounded-xl px-3 py-1.5 active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" data-icon="notifications" style="font-variation-settings: 'FILL' 1;">notifications</span>
+<span class="font-['Inter'] text-[10px] font-bold uppercase tracking-wider mt-1">Alerts</span>
+</a>
+</nav>
+</body></html>
