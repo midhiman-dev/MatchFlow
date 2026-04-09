@@ -1,0 +1,5 @@
+{
+  "name": "MatchFlow",
+  "description": "A cricket-aware smart stadium assistant and operations platform for real-time crowd intelligence, queue-aware guidance, and safety-first routing.",
+  "requestFramePermissions": []
+}
