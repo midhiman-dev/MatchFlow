@@ -7,3 +7,4 @@ export * from './types';
 export * from './seed';
 export * from './graph';
 export * from './validation';
+export * from './routing';
