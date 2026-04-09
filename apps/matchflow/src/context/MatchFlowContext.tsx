@@ -38,6 +38,7 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       orders: [],
       match: INITIAL_MATCH,
       fanLocation: 'z1',
+      lastSyncTime: new Date().toISOString(),
     };
   });
 
@@ -46,7 +47,13 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, [state]);
 
   const setRole = (role: AppState['role']) => setState(s => ({ ...s, role }));
-  const setConnectivity = (connectivity: AppState['connectivity']) => setState(s => ({ ...s, connectivity }));
+  const setConnectivity = (connectivity: AppState['connectivity']) => {
+    setState(s => ({ 
+      ...s, 
+      connectivity,
+      lastSyncTime: connectivity === 'Connected' ? new Date().toISOString() : s.lastSyncTime
+    }));
+  };
 
   const triggerScenario = (scenario: ScenarioType) => {
     setState(s => {
@@ -122,6 +129,7 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       orders: [],
       match: INITIAL_MATCH,
       fanLocation: 'z1',
+      lastSyncTime: new Date().toISOString(),
     });
   };
 

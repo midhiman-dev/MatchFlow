@@ -9,6 +9,7 @@ import { AlertsCenter } from './fan/AlertsCenter';
 import { EmergencyView } from './fan/EmergencyView';
 import { FanBottomNav } from '../components/FanBottomNav';
 import { FanHeader } from '../components/FanHeader';
+import { ConnectivityOverlay } from '../components/ConnectivityOverlay';
 import { AnimatePresence, motion } from 'motion/react';
 
 export type FanTab = 'Match' | 'Amenities' | 'Route' | 'Order' | 'Alerts';
@@ -24,6 +25,7 @@ export const FanApp: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-surface-container-low pb-24">
       <FanHeader />
+      <ConnectivityOverlay />
       
       <main className="flex-1 overflow-y-auto px-4 pt-20">
         <AnimatePresence mode="wait">

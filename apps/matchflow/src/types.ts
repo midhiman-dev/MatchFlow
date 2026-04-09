@@ -67,4 +67,5 @@ export interface AppState {
   orders: Order[];
   match: MatchState;
   fanLocation: string; // zoneId
+  lastSyncTime: string | null;
 }

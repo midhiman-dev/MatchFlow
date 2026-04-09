@@ -12,7 +12,7 @@ export const FanHeader: React.FC = () => {
   const { connectivity } = useMatchFlow();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-40 bg-white/80 backdrop-blur-xl border-b border-outline-variant/10 px-6 py-4 flex justify-between items-center">
+    <header className="fixed top-0 left-0 right-0 z-40 bg-white/70 backdrop-blur-2xl border-b border-white/20 px-6 py-4 flex justify-between items-center shadow-sm">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
           <img 
