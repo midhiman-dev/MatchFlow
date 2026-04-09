@@ -65,7 +65,7 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         newState.match = { ...s.match, moment: 'Wicket Surge' };
       } else if (scenario === 'Emergency') {
         newState.emergencyActive = true;
-        newState.zones = s.zones.map(z => z.id === 'z6' ? { ...z, status: 'Emergency', congestionBand: 'Critical' } : z);
+        newState.zones = s.zones.map(z => z.id === 'z6' ? { ...z, status: 'emergency', congestionBand: 'Critical' } : z);
         newState.alerts = [
           { id: Date.now().toString(), type: 'Emergency', title: 'EMERGENCY ACTIVE', message: 'Path blocked in South Concourse. Follow directed route to Gate D.', timestamp: new Date().toISOString(), isRead: false },
           ...s.alerts

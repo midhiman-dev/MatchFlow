@@ -29,11 +29,11 @@ export function calculateRoute(
   
   // Direct path
   const directPath = paths.find(p => 
-    (p.fromZoneId === startZoneId && p.toZoneId === endZoneId) ||
-    (p.fromZoneId === endZoneId && p.toZoneId === startZoneId)
+    (p.fromNodeId === startZoneId && p.toNodeId === endZoneId) ||
+    (p.fromNodeId === endZoneId && p.toNodeId === startZoneId)
   );
 
-  if (directPath && !directPath.isClosed && !directPath.emergencyBlocked) {
+  if (directPath && directPath.status === 'open') {
     return {
       steps: [
         { instruction: `Proceed from ${startZone.name} to ${endZone.name}`, distance: directPath.baseWeight * 100, zoneId: endZoneId }
@@ -47,15 +47,15 @@ export function calculateRoute(
   const viaZones = ['z5', 'z6'];
   for (const viaId of viaZones) {
     const path1 = paths.find(p => 
-      (p.fromZoneId === startZoneId && p.toZoneId === viaId) ||
-      (p.fromZoneId === viaId && p.toZoneId === startZoneId)
+      (p.fromNodeId === startZoneId && p.toNodeId === viaId) ||
+      (p.fromNodeId === viaId && p.toNodeId === startZoneId)
     );
     const path2 = paths.find(p => 
-      (p.fromZoneId === viaId && p.toZoneId === endZoneId) ||
-      (p.fromZoneId === endZoneId && p.toZoneId === viaId)
+      (p.fromNodeId === viaId && p.toNodeId === endZoneId) ||
+      (p.fromNodeId === endZoneId && p.toNodeId === viaId)
     );
 
-    if (path1 && path2 && !path1.isClosed && !path2.isClosed && !path1.emergencyBlocked && !path2.emergencyBlocked) {
+    if (path1 && path2 && path1.status === 'open' && path2.status === 'open') {
       const viaZone = zones.find(z => z.id === viaId)!;
       return {
         steps: [
@@ -67,6 +67,7 @@ export function calculateRoute(
       };
     }
   }
+
 
   return {
     steps: [{ instruction: 'No safe route found. Please wait for steward instructions.', distance: 0, zoneId: startZoneId }],

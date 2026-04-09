@@ -1,46 +1,27 @@
+import { 
+  Zone as DomainZone, 
+  Amenity as DomainAmenity, 
+  Path as DomainPath,
+  CongestionBand as DomainCongestionBand,
+  VenueStatus
+} from './domain/venue/types';
 
-export type CongestionBand = 'Low' | 'Moderate' | 'High' | 'Critical';
+export type CongestionBand = DomainCongestionBand;
+export type Zone = DomainZone;
+export type Amenity = DomainAmenity;
+export type Path = DomainPath;
 
-export interface Zone {
-  id: string;
-  name: string;
-  type: 'Stand' | 'Concourse' | 'Gate' | 'AmenityArea';
-  capacity: number;
-  currentFans: number;
-  congestionBand: CongestionBand;
-  densityScore: number; // 0 to 1
-  entryRate: number;
-  exitRate: number;
-  status: 'Open' | 'Closed' | 'Emergency';
-  updatedAt: string;
-}
+export type { 
+  VenueStatus,
+  VenueNode,
+  ZoneType,
+  AmenityType,
+  Gate,
+  Closure,
+  EventTrigger,
+  VenueGraph 
+} from './domain/venue/types';
 
-export type AmenityType = 'Food' | 'Washroom' | 'FirstAid' | 'Merchandise';
-
-export interface Amenity {
-  id: string;
-  name: string;
-  type: AmenityType;
-  zoneId: string;
-  walkMinutes: number;
-  queueMinutes: number;
-  queueBand: CongestionBand;
-  confidence: number; // 0 to 1
-  isRecommended: boolean;
-  status: 'Open' | 'Closed';
-  updatedAt: string;
-  image?: string;
-}
-
-export interface Path {
-  id: string;
-  fromZoneId: string;
-  toZoneId: string;
-  baseWeight: number; // distance or time
-  isClosed: boolean;
-  emergencyBlocked: boolean;
-  label: string;
-}
 
 export interface Alert {
   id: string;
