@@ -1,573 +1,236 @@
-# MatchFlow Project Context
+# Spec 01 - Venue Domain Model
 
-**Version:** v1.0  
-**Date:** 2026-04-08  
-**Project Name:** MatchFlow  
-**Project Type:** Smart stadium enterprise solution / challenge-scoped MVP  
-**Status:** Active working context
+## Status
+- Draft
 
----
+## Owner
+- Human owner: [name]
+- Primary implementing agent: Architect Agent
 
-## 1. Purpose of this file
+## Why
+MatchFlow requires a structured, graph-based representation of the stadium to enable core features like heat mapping, queue-aware guidance, and emergency rerouting. A unified domain model ensures consistency across the fan app, operator dashboard, and simulation logic.
 
-This file is the root project-context document for MatchFlow.
-
-It captures the most important business, product, technical, and delivery decisions made so far so future work stays consistent across:
-
-- BRD, PRD, SRS, and SDD artifacts
-- Antigravity implementation sessions
-- Google Stitch design work
-- AI Studio prototyping
-- feature specs, prompts, reviews, and demos
-
-Use this file as the first reference before creating specs, prompts, tasks, or new project documents.
+Answer:
+- **What user or operator problem does this solve?** It provides the spatial "map" that allows fans to find amenities and operators to manage crowd flow.
+- **Why is it important for the 72-hour MVP build?** It is the foundational layer upon which all other features (routing, heatmaps, simulator) are built.
+- **What business/demo value does it unlock?** Enables believable routing outcomes and visible operational state transitions (e.g., closing a gate and seeing routes update).
+- **Why should it be built now instead of later?** Without a defined domain model, other agents cannot implementation services or UI that depend on venue state.
 
 ---
 
-## 2. Project snapshot
+## What
+Define and implement the core venue domain model as a simplified graph of zones, paths, gates, and amenities.
 
-MatchFlow is a cricket-aware smart stadium assistant and operations platform designed for large cricket venues such as Narendra Modi Stadium, Eden Gardens, or similar high-capacity stadiums.
+### Include
+- Shared TypeScript interfaces for all venue entities.
+- A seed dataset representing a believable cricket venue (e.g., "MatchFlow Stadium").
+- Basic graph validation rules (e.g., ensuring paths connect valid nodes).
+- Support for "Closure" states on paths and zones.
 
-The project is being developed as a **72-hour challenge-scoped MVP** and is intentionally focused on a believable, usable product slice rather than a fully production-complete platform.
-
-### Core problem
-Cricket venues face intense but predictable crowd surges during moments such as:
-
-- innings breaks
-- DRS moments
-- wickets / momentum shifts
-- end-of-match exits
-
-These surges lead to:
-
-- long queues at concessions and washrooms
-- concourse bottlenecks
-- missed concession revenue
-- poor crowd distribution
-- safety and evacuation risk
-- degraded fan experience
-
-### MatchFlow response
-MatchFlow addresses this through:
-
-- real-time crowd flow awareness
-- queue alerts and least-crowded recommendations
-- fan rerouting guidance
-- in-seat ordering options
-- emergency routing support
-- match-aware engagement notifications
+### Must not be
+- A CAD/BIM digital twin integration.
+- A seat-level coordinate system.
+- Dependent on real-time sensor hardware.
 
 ---
 
-## 3. Product vision
-
-MatchFlow should work as a **smart, dynamic assistant for both fans and stadium operators**.
-
-### Fan-side vision
-A mobile-first stadium companion that helps fans:
-
-- avoid long queues
-- find the best route to amenities
-- order snacks without entering crowded zones
-- receive match-aware alerts and guidance
-- get safe exit instructions during congestion or emergencies
-
-### Operator-side vision
-A control interface that helps stadium teams:
-
-- monitor zone congestion in near real time
-- identify crowd pressure hotspots
-- push rerouting or queue alerts
-- manage emergency closures and route changes
-- improve utilization of concessions and washrooms
-
-### Strategic positioning
-**MatchFlow is a cricket-aware smart stadium assistant that helps major venues manage fan surges during innings breaks and match exits through real-time crowd intelligence, queue-aware routing, in-seat ordering, and safety-first digital twin guidance.**
+## Success Criteria
+- Domain types are defined and shared across the application.
+- Seed data represents a complete, traversable stadium graph with at least 4 stands, 8 concourse sections, and 10+ amenities.
+- Validation logic catches disconnected nodes or invalid path definitions.
+- The model supports toggling `status: "closed"` on any path or zone.
 
 ---
 
-## 4. MVP scope boundaries
+## Scope
 
-The MVP must remain challenge-ready, believable, and demo-friendly.
+### In Scope
+- Core entities: `Zone`, `Path`, `Gate`, `Amenity`.
+- Descriptive metadata for each (id, name, capacity, status).
+- Graph structure (nodes and edges).
+- Seed venue data (hardcoded or JSON).
+- Validation utilities for the venue graph.
 
-### In scope
-- fan-facing PWA
-- operator dashboard
-- real-time zone heat mapping
-- queue alerts for washrooms and concessions
-- cached wait times
-- innings-break rerouting
-- end-of-match exit guidance
-- in-seat snack ordering
-- match engagement notifications
-- emergency rerouting using a simplified digital twin
-- offline-first behavior for congested networks
-- synthetic event simulation for demo scenarios
+### Out of Scope
+- Full indoor positioning (IPS).
+- Geo-spatial coordinates (Lat/Long) unless simplified as 2D coordinates for rendering.
+- Seat-level inventory or tracking.
+- Rendering logic or UI components.
 
-### Explicitly out of scope
-- full CCTV / computer vision implementation
-- full CAD/BIM digital twin integration
-- production-grade indoor positioning
-- full payment gateway integration
-- real sensor hardware dependency
-- seat-level live tracking
-- complex enterprise back-office workflows beyond the challenge need
-
-### Modeling decision
-For the MVP, the stadium is modeled as:
-
-- zones
-- paths
-- gates
-- amenity nodes
-- capacity values
-- route graph
-
-This simplified digital twin is enough for congestion logic, routing, and emergency demonstrations.
+### Explicit Non-Goals
+- No integration with external mapping APIs (Google Maps/Mapbox) for the 2D venue layout.
+- No real-time sensor data ingestion in this slice.
 
 ---
 
-## 5. Key users
+## Constraints
 
-### Primary user groups
-1. **Fans / attendees**
-   - want fast, low-friction guidance in a crowded stadium
-   - need quick interpretation of queue and route information
-   - may be operating under weak connectivity and low attention
+### Product Constraints
+- Must align with the "zone-based" architecture decision.
+- Must be believable for a high-capacity stadium scenario.
 
-2. **Stadium operations team**
-   - wants real-time visibility into crowd hotspots
-   - needs fast control actions during surge or emergency scenarios
-   - requires clear, low-clutter operational views
+### Technical Constraints
+- Use TypeScript for all definitions.
+- Keep the model serializable (for Firebase/JSON).
+- Place domain code in a central, reusable location (e.g., `src/domain/`).
 
-3. **Stewards / event staff**
-   - benefit from emergency routing visibility and operational direction
-   - may act as assisted operational users during incident flows
-
-4. **Challenge judges / reviewers**
-   - not product end-users, but an important audience for the MVP
-   - must clearly see Google-services usage, code quality, usability, security, testing, and practical value
+### Delivery Constraints
+- No code implementation in this spec-creation task.
+- Tasks must be small and verifiable.
 
 ---
 
-## 6. Preferred technical direction
+## Dependencies
 
-### Frontend
-- React
-- TypeScript
-- PWA architecture
-- mobile-first UX for fans
-- dashboard UX for operators
+### Upstream dependencies
+- `docs/architecture/architecture-overview.md`
+- `docs/product/PRD.md`
 
-### Backend / platform
-- Firebase Realtime Database for live state
-- Cloud Firestore for durable structured data
-- Cloud Run for services and APIs
-- Pub/Sub for event ingestion and simulation pipeline
-- Firebase Cloud Messaging for notifications
-- Firebase Auth for access control
-- Firebase App Check for client protection
-
-### AI / Google services direction
-- Google Antigravity for spec-driven build execution
-- Google Stitch for UI generation and design exploration
-- Google AI Studio for functional prototyping and Gemini-backed flow exploration
-- Gemini for assistant and reasoning capabilities
-
-### Optional / later
-- BigQuery for analytics or replay
-- Memorystore / Redis if advanced caching becomes necessary
+### Downstream dependencies
+- `02-fan-app-shell`
+- `03-live-heatmap`
+- `04-queue-alerts`
+- `06-emergency-reroute`
 
 ---
 
-## 7. Core product modules identified so far
+## Current State
 
-1. **Venue Domain Model**
-   - zones
-   - paths
-   - gates
-   - concessions
-   - washrooms
-   - event types
-   - route graph
+### Relevant files
+- `src/types.ts` (contains prototype types to be refactored)
+- `src/constants.ts` (contains prototype seed data to be refactored)
 
-2. **Fan App Shell**
-   - match center
-   - seat / stand context
-   - map and utility navigation
-   - live alerts
+### Existing patterns to follow
+- Simplified zone-level modeling from the AI Studio prototype.
 
-3. **Live Heat Map**
-   - zone density state
-   - congestion bands
-   - operator heat view
-
-4. **Queue Alerts**
-   - amenity wait times
-   - queue status cards
-   - least-crowded suggestions
-   - queue-aware redirection
-
-5. **In-Seat Ordering**
-   - snack ordering
-   - pickup / delivery flow
-   - order tracking
-   - queue-aware service choice
-
-6. **Emergency Rerouting**
-   - zone closure logic
-   - safe path display
-   - emergency banners
-   - operator overrides
-
-7. **Offline Sync**
-   - cached last-known state
-   - offline-friendly route guidance
-   - pending actions / outbox
-   - network recovery behavior
-
-8. **Demo Simulator**
-   - innings-break surge
-   - DRS event
-   - wicket-driven crowd shift
-   - end-match exit surge
-   - emergency scenario
+### Existing behavior
+- Prototype has basic `Zone` and `Amenity` types but lacks a formal graph-based `Path` model for multi-hop routing.
 
 ---
 
-## 8. Core architecture and experience decisions
-
-### Realtime approach
-Heat mapping should stay at **zone level**, not seat-level live tracking.
-
-Realtime zone state may include:
-- density score
-- flow direction
-- entry rate
-- exit rate
-- queue pressure
-- green / amber / red status band
-- timestamp
-- confidence
-
-### Queue alert approach
-Queue alerts should be driven by centrally computed amenity wait-time state, not constant client polling.
-
-### Event sources for the MVP
-Use synthetic or mocked streams representing:
-- entry / exit scans
-- amenity activity
-- steward or operator input
-- match event triggers
-- emergency events
-
-### Update behavior
-Use higher-frequency updates during surge windows like innings break, and lower cadence during normal play.
+## Proposed Approach
+- Extract and refine existing prototype types into a modular domain structure.
+- Define a `VenueGraph` object that holds nodes (Zones/Amenities/Gates) and edges (Paths).
+- Use a adjacency list or similar simple graph structure for traversability.
+- Implement validation helper: `validateVenueGraph(graph): ValidationResult`.
 
 ---
 
-## 9. Caching and offline-first decisions
+## Data / Domain Model Impact
 
-Because stadium connectivity can degrade under crowd load, MatchFlow must be **offline-first for key user journeys**.
+### New types / entities
+- `VenueNode`: Base type for anything on the map.
+- `Zone` (extends `VenueNode`): Stands, Concourses, Gate Areas.
+- `Amenity` (extends `VenueNode`): Washrooms, Concessions.
+- `Gate` (extends `VenueNode`): Entry/Exit points.
+- `Path`: Connects two `VenueNodes`. Includes `isDirectional`, `weight` (length/friction), and `status`.
 
-### Core caching approach
-- use a central queue estimation service
-- publish cached amenity wait-time objects
-- let fan clients subscribe to cached live state
-
-### Cache object examples
-Each amenity queue object may include:
-- wait time estimate
-- wait band
-- queue length estimate
-- confidence
-- updated timestamp
-- expiry timestamp
-
-### Fan UX freshness model
-Use **stale-while-revalidate** behavior:
-- show last known state if still recent
-- degrade from exact times to coarse queue bands when stale
-- clearly show freshness like “updated X sec ago”
-
-### Must remain usable offline or under degraded connectivity
-- app shell
-- venue map basics
-- seat / stand context
-- saved routes
-- last known nearby amenity data
-- order cart / pending actions
-- emergency guidance
-- last known queue / routing snapshot
-
-### Degraded-mode UX rules
-When network quality drops:
-- switch from exact minutes to low / moderate / high bands
-- preserve last known guidance
-- show freshness status clearly
-- prioritize safety instructions over optional live features
+### Updated contracts
+- Refine existing prototype `Zone` and `Amenity` types to include `nodeId` for graph linkage.
 
 ---
 
-## 10. Safety and digital twin decisions
-
-Safety is a first-class requirement.
-
-### Safety scope for the MVP
-- operator-triggered emergency mode
-- digital closure of zones or paths
-- recomputed safe exits
-- fan-facing emergency instructions
-- steward / operator rerouted-flow view
-
-### Digital twin approach
-Use a simplified graph-based model of:
-- zones
-- paths
-- entry / exit gates
-- amenity points
-- closure states
-- capacity constraints
-
-No full CAD/BIM integration is needed in the MVP.
+## UX / UI Notes
+(Not applicable for this domain-level spec)
 
 ---
 
-## 11. Design principles
+## Realtime / Offline / Security Notes
 
-### Primary design tool
-Google Stitch is the primary UI design accelerator.
+### Realtime
+- Venue graph topology is mostly static but `status` (Open/Closed) must be updated in real-time.
 
-### Fan UX principles
-- current best action should be obvious
-- queue and routing information must be quickly understandable
-- large touch targets
-- high contrast
-- no color-only status communication
-- usable in glare, noise, crowd pressure, and one-handed scenarios
-
-### Ops UX principles
-- immediate visibility into hotspot zones
-- clear risk levels
-- fast action controls
-- minimal clutter
-- incident-ready workflows
-
-### Design-to-build flow
-1. create screens in Stitch
-2. export / consolidate design context into `DESIGN.md`
-3. use that approved design context during implementation
-4. do not implement from memory of screenshots alone
+### Offline
+- Full venue graph and seed data must be cached for offline routing.
 
 ---
 
-## 12. Delivery methodology
+## Tasks
 
-### Approved method
-**Spec-Driven Development (SDD)**
+### T1 - Define Shared Domain Interfaces
+**Goal**  
+Establish the TypeScript contracts for the venue model in a central location.
 
-### What this means
-MatchFlow must not be built through large vague prompts.
+**Files likely involved**  
+- `src/domain/types/venue.ts`
+- `src/domain/types/zone.ts`
+- `src/domain/types/path.ts`
 
-Every feature should be built as:
-- one focused spec
-- bounded tasks
-- explicit constraints
-- clear validation steps
-- small reviews and commits
+**Implementation notes**  
+- Create `VenueNode`, `Zone`, `Amenity`, `Gate`, and `Path` interfaces.
+- Ensure all types support a `status` field (`"open" | "closed" | "congested"`).
+- Define `VenueGraph` as a collection of these entities.
 
-### Mandatory execution pattern
-**one spec → one task → one verification → one review → one commit**
+**Must not**  
+- Include UI properties or rendering logic.
 
-### SDD expectations
-- the spec is the source of truth
-- the human decides scope and architecture
-- the agent implements within boundaries
-- fresh sessions are preferred when practical
-- verify before moving forward
-- keep the app demo-ready at all times
+**Verification**  
+- Typecheck passes.
 
 ---
 
-## 13. Build guardrails
+### T2 - Implement Seed Venue Graph
+**Goal**  
+Create a believable seed dataset for a large cricket stadium (e.g., 50k+ capacity).
 
-### Core philosophy
-MatchFlow is a focused, modular, believable 72-hour MVP — not an over-engineered production platform.
+**Files likely involved**  
+- `src/domain/constants/matchFlowStadium.ts`
 
-### Non-negotiable rules
-- do not ask the AI to “build the whole app”
-- keep tasks small and reviewable
-- do not introduce unrelated changes
-- prefer reuse over reinvention
-- keep the repo runnable whenever practical
-- protect demo credibility in every implementation choice
+**Implementation notes**  
+- Define 4 main stands (North, South, East, West).
+- Define concourse loops (Inner/Outer) connecting the stands.
+- Place washrooms and concessions in each concourse segment.
+- Connect all nodes with `Path` objects.
 
-### Trade-off priorities
-When trade-offs arise, prioritize:
-1. MVP clarity
-2. working demo quality
-3. clean modular code
-4. usability and accessibility
-5. reliability under simulated stadium congestion
-6. Google services integration
-7. feature depth
-8. future extensibility
+**Must not**  
+- Hardcode logic into the data file; it should be pure static data.
 
-### Working motto
-**Build small. Validate fast. Stay believable. Keep MatchFlow demo-ready.**
+**Verification**  
+- Manually review the graph for completeness and logical connectivity.
 
 ---
 
-## 14. Documentation operating model
+### T3 - Venue Graph Validation Utility
+**Goal**  
+Provide a way to ensure the venue graph is logically sound before the app starts.
 
-The project should keep a clear separation between documentation layers.
+**Files likely involved**  
+- `src/domain/validation/venueValidator.ts`
 
-### Business / stakeholder documents
-- BRD
-- PRD
-- SRS
-- SDD / architecture note
+**Implementation notes**  
+- Check for duplicate node IDs.
+- Check for paths pointing to non-existent nodes.
+- Identify "islands" (isolated nodes with no paths).
 
-### Agent-facing execution documents
-- feature specs
-- task lists
-- validation checklists
-- prompt packs
+**Must not**  
+- Throw errors that crash the app; return a report or use console warnings for the MVP.
 
-### Design source-of-truth documents
-- `DESIGN.md`
-- Stitch exports
-- screen flow notes
-
-### Build governance documents
-- `skills.md`
-- `agents.md`
-- project-context.md
-- build rules / SDD working method
+**Verification**  
+- Unit test with a broken graph fixture.
 
 ---
 
-## 15. Initial feature spec sequence
+## Validation
 
-Recommended implementation order:
+### Required validation
+- [ ] Typecheck/build passes
+- [ ] Seed data represents valid stadium topology
+- [ ] No unrelated regressions observed
+- [ ] Docs updated if behavior/contracts changed
 
-1. `01-venue-domain-model`
-2. `02-fan-app-shell`
-3. `03-live-heatmap`
-4. `04-queue-alerts`
-5. `05-in-seat-ordering`
-6. `06-emergency-reroute`
-7. `07-offline-sync`
-8. `08-demo-simulator`
-
-This order should be changed only deliberately.
+### Manual verification checklist
+- [ ] Review `matchFlowStadium.ts` for logical flow (e.g., Can I get from Stand A to Gate B via the Concourse?).
 
 ---
 
-## 16. 72-hour working direction
-
-### Day 1
-- lock scope
-- set architecture
-- establish repo and specs
-- create venue model
-- create simulator base
-- produce initial UI design
-
-### Day 2
-- build realtime crowd and queue behavior
-- implement fan and ops live flows
-- build assistant logic
-- connect simulator to the UI
-
-### Day 3
-- implement offline-first and emergency mode
-- polish the demo
-- run tests
-- script the pitch / demo flow
-- fix usability issues
+## Risks / Edge Cases
+- **Graph Complexity**: Too many nodes/paths may lead to slower recomputation if not optimized.
+- **Disconnected Nodes**: Seed data errors could break routing logic without clear errors.
 
 ---
 
-## 17. Judging and evaluation alignment
+## Change Log
 
-The project should clearly demonstrate:
-- smart dynamic assistant behavior
-- context-aware decision-making
-- effective Google services usage
-- practical real-world usability
-- clean and maintainable code
-- secure and responsible implementation
-- efficient resource usage
-- testing and validation
-- accessibility and inclusion
-
-This means MatchFlow should be presented as more than a fan app. It should read and behave like a **smart stadium assistant with operational intelligence**.
-
----
-
-## 18. Definition of done for a task
-
-A MatchFlow task is done only when:
-- implementation matches the approved spec
-- validation has been completed
-- the code is readable and maintainable
-- no unrelated scope has been introduced
-- tests or manual checks are complete as required
-- the slice is reviewable
-- the repo remains stable
-
----
-
-## 19. Immediate next artifacts
-
-The agreed near-term artifact sequence is:
-
-1. BRD
-2. PRD
-3. SRS
-4. SDD / architecture note
-5. `skills.md`
-6. `agents.md`
-7. `.ai/templates/spec.md`
-8. initial feature specs
-9. Stitch master design prompt
-10. `DESIGN.md`
-
----
-
-## 20. Current status summary
-
-At this stage, MatchFlow has:
-- a confirmed name and positioning
-- a clear problem statement
-- defined MVP boundaries
-- a preferred Google-native architecture direction
-- core feature slices
-- real-time, caching, offline, and safety decisions
-- a Spec-Driven Development method
-- a working documentation model
-- a staged implementation sequence
-
-The next step is to use this file as the baseline context for all implementation-facing work.
-
----
-
-## 21. Recommended usage instructions
-
-Before starting any new feature or prompt:
-
-1. read `project-context.md`
-2. read the build rules / SDD method note
-3. confirm the relevant spec or create one
-4. define a small task with validation
-5. implement only that bounded task
-6. review before moving to the next slice
-
-This file should be updated whenever there is a meaningful change in:
-- scope
-- architecture
-- core feature direction
-- build methodology
-- toolchain decisions
-- delivery priorities
+### v1
+- Initial draft based on PRD and Architecture Overview.
+- Extracted domain logic from prototype context.
