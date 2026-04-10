@@ -20,6 +20,9 @@ import {
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { selectHotspotSummary, selectVisibleZoneStatus } from '../domain/live/selectors';
+import { HeatmapGrid } from '../components/operator/HeatmapGrid';
+import { HotspotSummaryPanel } from '../components/operator/HotspotSummaryPanel';
+import { ZoneStatusCard } from '../components/operator/ZoneStatusCard';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -133,33 +136,23 @@ export const OpsApp: React.FC = () => {
             >
               {/* Stats Grid */}
               <div className="grid grid-cols-4 gap-6">
-                {zones.filter(z => z.type === 'Stand').map(zone => {
-                  const visible = selectVisibleZoneStatus(zone, liveStates[zone.id]);
-                  return (
-                    <div key={zone.id} className="bg-white p-6 rounded-3xl shadow-sm border border-outline-variant/10">
-                      <div className="flex justify-between items-start mb-4">
-                        <span className="text-[10px] font-black text-outline uppercase tracking-widest">{zone.name}</span>
-                        <span className={cn(
-                          "px-2 py-0.5 rounded-full text-[8px] font-black uppercase",
-                          visible.status === 'low' ? "bg-emerald-100 text-emerald-700" : 
-                          visible.status === 'moderate' ? "bg-amber-100 text-amber-700" : "bg-error/10 text-error"
-                        )}>{visible.status}</span>
-                      </div>
-                      <div className="text-3xl font-headline font-black text-primary mb-2">
-                        {Math.round(visible.density * 100)}%
-                      </div>
-                      <div className="w-full h-2 bg-surface-container rounded-full overflow-hidden">
-                        <div 
-                          className={cn(
-                            "h-full transition-all duration-1000",
-                            visible.status === 'critical' ? "bg-error" : visible.status === 'high' ? "bg-amber-500" : "bg-emerald-500"
-                          )}
-                          style={{ width: `${visible.density * 100}%` }}
-                        />
-                      </div>
-                    </div>
-                  );
-                })}
+                {zones.filter(z => z.type === 'Stand').slice(0, 4).map(zone => (
+                  <ZoneStatusCard 
+                    key={zone.id} 
+                    zone={zone} 
+                    liveState={liveStates[zone.id] || {
+                      zoneId: zone.id,
+                      density: zone.densityScore,
+                      status: 'low',
+                      flowDirection: 'stable',
+                      entryRate: 0,
+                      exitRate: 0,
+                      queuePressure: 0,
+                      updatedAt: Date.now(),
+                      confidence: 0
+                    }}
+                  />
+                ))}
               </div>
 
               {/* Main Panels */}
@@ -194,43 +187,34 @@ export const OpsApp: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Hotspot Overview (Added in T1) */}
-                <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-outline-variant/10">
-                  <h3 className="text-xl font-headline font-black text-primary mb-6 flex items-center gap-2">
-                    <TrendingUp size={20} className="text-error" />
-                    Hotspot Overview
-                  </h3>
-                  <div className="space-y-6">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="bg-error/5 p-4 rounded-2xl border border-error/10">
-                        <p className="text-[10px] font-black text-error uppercase tracking-wider">Critical</p>
-                        <p className="text-2xl font-black text-error">{hotspotSummary.criticalCount}</p>
-                      </div>
-                      <div className="bg-secondary/5 p-4 rounded-2xl border border-secondary/10">
-                        <p className="text-[10px] font-black text-secondary uppercase tracking-wider">High</p>
-                        <p className="text-2xl font-black text-secondary">{hotspotSummary.highCount}</p>
-                      </div>
-                    </div>
+                <HotspotSummaryPanel summary={hotspotSummary} />
+              </div>
 
-                    <div className="space-y-3">
-                      <p className="text-[10px] font-black text-outline uppercase tracking-widest">Top Risks</p>
-                      {hotspotSummary.topHotspots.map(hotspot => (
-                        <div key={hotspot.zoneId} className="flex items-center justify-between p-3 rounded-xl bg-surface-container-low border border-outline-variant/10">
-                          <div className="flex items-center gap-3">
-                            <div className={cn(
-                              "w-2 h-2 rounded-full",
-                              hotspot.status === 'critical' ? "bg-error" : "bg-secondary"
-                            )} />
-                            <span className="text-xs font-bold text-primary">{hotspot.zoneName}</span>
-                          </div>
-                          <span className="text-[10px] font-black text-outline uppercase">{Math.round(hotspot.density * 100)}%</span>
-                        </div>
-                      ))}
-                      {hotspotSummary.topHotspots.length === 0 && (
-                        <p className="text-center py-4 text-xs font-bold text-outline">No active hotspots</p>
-                      )}
+              {/* Alerts Panel Row */}
+              <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-outline-variant/10">
+                <h3 className="text-xl font-headline font-black text-primary mb-6 flex items-center gap-2">
+                  <AlertTriangle size={20} className="text-secondary" />
+                  Active Alerts
+                </h3>
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  {alerts.slice(0, 4).map(alert => (
+                    <div key={alert.id} className="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/5 flex gap-3">
+                      <div className={cn(
+                        "w-2 h-2 rounded-full mt-1.5 shrink-0",
+                        alert.type === 'Emergency' ? "bg-error" : 
+                        alert.type === 'Warning' ? "bg-secondary" : "bg-primary"
+                      )} />
+                      <div>
+                        <p className="font-bold text-sm text-primary">{alert.title}</p>
+                        <p className="text-[10px] text-on-surface-variant mt-1 line-clamp-1">{alert.message}</p>
+                      </div>
                     </div>
-                  </div>
+                  ))}
+                  {alerts.length === 0 && (
+                    <div className="col-span-full text-center py-4 text-outline">
+                      <p className="text-sm font-bold">No active alerts</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -311,6 +295,17 @@ export const OpsApp: React.FC = () => {
                   </div>
                 </div>
               </div>
+            </motion.div>
+          )}
+
+          {activeView === 'Zones' && (
+            <motion.div 
+              key="zones"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+            >
+              <HeatmapGrid zones={zones} liveStates={liveStates} />
             </motion.div>
           )}
         </AnimatePresence>
