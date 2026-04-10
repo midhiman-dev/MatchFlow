@@ -22,6 +22,13 @@ export type {
   VenueGraph 
 } from './domain/venue/types';
 
+export type { 
+  ZoneLiveState, 
+  ZoneStatus, 
+  FlowDirection, 
+  HotspotSummary 
+} from './domain/live/types';
+
 
 export interface Alert {
   id: string;

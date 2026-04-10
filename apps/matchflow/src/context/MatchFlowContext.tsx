@@ -1,7 +1,8 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { AppState, ScenarioType, Zone, Amenity, Alert, Order, MatchState, CongestionBand } from '../types';
+import { AppState, ScenarioType, Zone, Amenity, Alert, Order, MatchState, CongestionBand, ZoneLiveState } from '../types';
 import { INITIAL_ZONES, INITIAL_AMENITIES, INITIAL_PATHS, INITIAL_MATCH } from '../constants';
+import { LiveStateService } from '../services/liveStateService';
 
 interface MatchFlowContextType extends AppState {
   setRole: (role: AppState['role']) => void;
@@ -12,6 +13,7 @@ interface MatchFlowContextType extends AppState {
   placeOrder: (order: Omit<Order, 'id' | 'timestamp' | 'status'>) => void;
   updateZoneStatus: (zoneId: string, status: Zone['status']) => void;
   resetState: () => void;
+  liveStates: Record<string, ZoneLiveState>;
 }
 
 const MatchFlowContext = createContext<MatchFlowContextType | undefined>(undefined);
@@ -39,8 +41,17 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       match: INITIAL_MATCH,
       fanLocation: 'z1',
       lastSyncTime: new Date().toISOString(),
+      liveStates: {},
     };
   });
+
+  const [liveStates, setLiveStates] = useState<Record<string, ZoneLiveState>>({});
+
+  useEffect(() => {
+    return LiveStateService.getInstance().subscribeToZones((states) => {
+      setLiveStates(states);
+    });
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('matchflow_state', JSON.stringify(state));
@@ -154,7 +165,7 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, [state.activeScenario]);
 
   return (
-    <MatchFlowContext.Provider value={{ ...state, setRole, setConnectivity, triggerScenario, toggleEmergency, addAlert, placeOrder, updateZoneStatus, resetState }}>
+    <MatchFlowContext.Provider value={{ ...state, liveStates, setRole, setConnectivity, triggerScenario, toggleEmergency, addAlert, placeOrder, updateZoneStatus, resetState }}>
       {children}
     </MatchFlowContext.Provider>
   );
