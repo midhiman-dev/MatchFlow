@@ -3,12 +3,7 @@ import React from 'react';
 import { useMatchFlow } from '../context/MatchFlowContext';
 import { motion, AnimatePresence } from 'motion/react';
 import { WifiOff, SignalHigh, AlertCircle } from 'lucide-react';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { cn } from '../utils/cn';
 
 export const ConnectivityOverlay: React.FC = () => {
   const { connectivity, lastSyncTime } = useMatchFlow();
@@ -56,7 +51,7 @@ export const ConnectivityOverlay: React.FC = () => {
                   </h3>
                   <span className="text-[10px] opacity-70 flex items-center gap-1">
                     <AlertCircle className="w-3 h-3" />
-                    Last updated {formatTime(lastSyncTime)}
+                    Last updated at {formatTime(lastSyncTime)}
                   </span>
                 </div>
                 <p className="text-xs opacity-80 leading-relaxed italic">

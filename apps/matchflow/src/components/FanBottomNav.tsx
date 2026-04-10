@@ -3,12 +3,7 @@ import React from 'react';
 import { FanTab } from '../screens/FanApp';
 import { useMatchFlow } from '../context/MatchFlowContext';
 import { Trophy, Store, Navigation, ShoppingCart, Bell } from 'lucide-react';
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
-
-function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+import { cn } from '../utils/cn';
 
 interface FanBottomNavProps {
   activeTab: FanTab;
