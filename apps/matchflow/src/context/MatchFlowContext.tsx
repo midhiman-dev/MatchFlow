@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { AppState, ScenarioType, Zone, Amenity, Alert, Order, MatchState, CongestionBand, ZoneLiveState } from '../types';
+import { AppState, ScenarioType, Zone, Amenity, Alert, Order, MatchState, CongestionBand, ZoneLiveState, AmenityLiveState } from '../types';
 import { INITIAL_ZONES, INITIAL_AMENITIES, INITIAL_PATHS, INITIAL_MATCH } from '../constants';
 import { LiveStateService } from '../services/liveStateService';
 
@@ -14,6 +14,7 @@ interface MatchFlowContextType extends AppState {
   updateZoneStatus: (zoneId: string, status: Zone['status']) => void;
   resetState: () => void;
   liveStates: Record<string, ZoneLiveState>;
+  amenityLiveStates: Record<string, AmenityLiveState>;
 }
 
 const MatchFlowContext = createContext<MatchFlowContextType | undefined>(undefined);
@@ -42,15 +43,26 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       fanLocation: 'z1',
       lastSyncTime: new Date().toISOString(),
       liveStates: {},
+      amenityLiveStates: {},
     };
   });
 
   const [liveStates, setLiveStates] = useState<Record<string, ZoneLiveState>>({});
+  const [amenityLiveStates, setAmenityLiveStates] = useState<Record<string, AmenityLiveState>>({});
 
   useEffect(() => {
-    return LiveStateService.getInstance().subscribeToZones((states) => {
+    const unsubZones = LiveStateService.getInstance().subscribeToZones((states) => {
       setLiveStates(states);
     });
+    
+    const unsubAmenities = LiveStateService.getInstance().subscribeToAmenities((states) => {
+      setAmenityLiveStates(states);
+    });
+
+    return () => {
+      unsubZones();
+      unsubAmenities();
+    };
   }, []);
 
   useEffect(() => {
@@ -165,7 +177,7 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, [state.activeScenario]);
 
   return (
-    <MatchFlowContext.Provider value={{ ...state, liveStates, setRole, setConnectivity, triggerScenario, toggleEmergency, addAlert, placeOrder, updateZoneStatus, resetState }}>
+    <MatchFlowContext.Provider value={{ ...state, liveStates, amenityLiveStates, setRole, setConnectivity, triggerScenario, toggleEmergency, addAlert, placeOrder, updateZoneStatus, resetState }}>
       {children}
     </MatchFlowContext.Provider>
   );

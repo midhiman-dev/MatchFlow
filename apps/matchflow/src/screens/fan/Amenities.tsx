@@ -4,6 +4,7 @@ import { useMatchFlow } from '../../context/MatchFlowContext';
 import { FanTab } from '../FanApp';
 import { motion } from 'motion/react';
 import { Utensils, Droplets, HeartPulse, ShoppingBag, Navigation, Clock, CheckCircle2, ChevronRight } from 'lucide-react';
+import { selectNearbyAmenitiesWithLiveState, selectRecommendedAmenity } from '../../domain/live/amenitySelectors';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -16,10 +17,17 @@ interface AmenitiesProps {
 }
 
 export const Amenities: React.FC<AmenitiesProps> = ({ onNavigate }) => {
-  const { amenities } = useMatchFlow();
+  const { amenities, amenityLiveStates } = useMatchFlow();
   const [filter, setFilter] = useState<'All' | 'Food' | 'Washroom' | 'FirstAid'>('All');
 
-  const filteredAmenities = amenities.filter(a => filter === 'All' || a.type === filter);
+  const enhancedAmenities = selectNearbyAmenitiesWithLiveState(amenityLiveStates ? amenities : amenities, amenityLiveStates);
+  const recommendedFood = selectRecommendedAmenity(enhancedAmenities, 'Food');
+  const recommendedWashroom = selectRecommendedAmenity(enhancedAmenities, 'Washroom');
+
+  console.log('[Amenities] Enhanced Amenities:', enhancedAmenities);
+  console.log('[Amenities] Recommended Food:', recommendedFood);
+  
+  const filteredAmenities = enhancedAmenities.filter(a => filter === 'All' || a.type === filter);
 
   const filterButtons = [
     { id: 'All', label: 'All', icon: null },

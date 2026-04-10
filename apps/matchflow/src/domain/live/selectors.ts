@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { ZoneStatus, ZoneLiveState, HotspotSummary } from './types';
+import { ZoneStatus, ZoneLiveState, HotspotSummary, AmenityStatus } from './types';
 import { Zone } from '../venue/types';
 
 /**
@@ -14,6 +14,16 @@ export const getStatusFromDensity = (density: number): ZoneStatus => {
   if (density >= 0.9) return 'critical';
   if (density >= 0.7) return 'high';
   if (density >= 0.4) return 'moderate';
+  return 'low';
+};
+
+/**
+ * Determines the status band for amenity wait times.
+ */
+export const getAmenityStatusFromWait = (minutes: number): AmenityStatus => {
+  if (minutes >= 15) return 'critical';
+  if (minutes >= 10) return 'high';
+  if (minutes >= 5) return 'moderate';
   return 'low';
 };
 

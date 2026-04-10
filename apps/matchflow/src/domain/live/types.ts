@@ -4,6 +4,7 @@
  */
 
 export type ZoneStatus = 'low' | 'moderate' | 'high' | 'critical';
+export type AmenityStatus = 'low' | 'moderate' | 'high' | 'critical';
 export type FlowDirection = 'inbound' | 'outbound' | 'stable' | 'circular';
 
 /**
@@ -20,6 +21,18 @@ export interface ZoneLiveState {
   queuePressure: number; // 0.0 to 1.0 (normalized pressure on zone facilities/exits)
   updatedAt: number; // Unix timestamp for drift-syncing
   confidence: number; // 0.0 to 1.0 logic-confidence in this reading
+}
+
+/**
+ * Technical contract for real-time amenity metrics (queues).
+ * Designed for Firebase Realtime Database (RTDB) sync.
+ */
+export interface AmenityLiveState {
+  amenityId: string;
+  queueMinutes: number;
+  status: AmenityStatus;
+  updatedAt: number; // Unix timestamp 
+  confidence: number; // 0.0 to 1.0
 }
 
 /**

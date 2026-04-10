@@ -22,12 +22,23 @@ export type {
   VenueGraph 
 } from './domain/venue/types';
 
-export type { 
+import { 
   ZoneLiveState, 
   ZoneStatus, 
+  AmenityLiveState,
+  AmenityStatus,
   FlowDirection, 
   HotspotSummary 
 } from './domain/live/types';
+
+export type { 
+  ZoneLiveState, 
+  ZoneStatus, 
+  AmenityLiveState,
+  AmenityStatus,
+  FlowDirection, 
+  HotspotSummary 
+};
 
 
 export interface Alert {
@@ -72,7 +83,8 @@ export interface AppState {
   paths: Path[];
   alerts: Alert[];
   orders: Order[];
-  match: MatchState;
+  liveStates: Record<string, ZoneLiveState>;
+  amenityLiveStates: Record<string, AmenityLiveState>;
   fanLocation: string; // zoneId
   lastSyncTime: string | null;
 }
