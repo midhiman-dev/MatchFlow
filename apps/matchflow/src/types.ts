@@ -52,15 +52,21 @@ export interface Alert {
   isRead: boolean;
 }
 
-export interface Order {
-  id: string;
-  items: { id: string; name: string; price: number; quantity: number }[];
-  total: number;
-  status: 'Pending' | 'Confirmed' | 'Preparing' | 'Ready' | 'Completed' | 'Failed';
-  timestamp: string;
-  type: 'Pickup' | 'InSeat';
-  seatInfo?: string;
-}
+import { 
+  Order as DomainOrder, 
+  OrderStatus as DomainOrderStatus,
+  ServiceMode as DomainServiceMode,
+  MenuProduct as DomainMenuProduct,
+  OrderItem as DomainOrderItem,
+  CartState as DomainCartState
+} from './domain/ordering/types';
+
+export type Order = DomainOrder;
+export type OrderStatus = DomainOrderStatus;
+export type ServiceMode = DomainServiceMode;
+export type MenuProduct = DomainMenuProduct;
+export type OrderItem = DomainOrderItem;
+export type CartState = DomainCartState;
 
 export interface MatchState {
   teams: { home: string; away: string };
@@ -83,6 +89,8 @@ export interface AppState {
   paths: Path[];
   alerts: Alert[];
   orders: Order[];
+  cart: CartState;
+  pendingSyncOrders: Order[]; // Orders queued while offline
   liveStates: Record<string, ZoneLiveState>;
   amenityLiveStates: Record<string, AmenityLiveState>;
   fanLocation: string; // zoneId
