@@ -22,11 +22,12 @@ export const OrderSnacks: React.FC = () => {
     removeFromCart, 
     updateCartQuantity, 
     setServiceMode, 
+    fanSeat,
     submitOrder 
   } = useMatchFlow();
   
   const [view, setView] = useState<'menu' | 'checkout' | 'tracking'>(orders.length > 0 ? 'tracking' : 'menu');
-  const [seatInput, setSeatInput] = useState(cart.seatInfo || '');
+  const [seatInput, setSeatInput] = useState(cart.seatInfo || fanSeat);
 
   const total = cart.total;
   const cartItems = cart.items;
@@ -45,7 +46,7 @@ export const OrderSnacks: React.FC = () => {
   };
 
   if (view === 'tracking') {
-    return <OrderTracking />;
+    return <OrderTracking onBack={() => setView('menu')} />;
   }
 
   return (
@@ -82,7 +83,7 @@ export const OrderSnacks: React.FC = () => {
                 <div key={item.id} className="bg-white rounded-2xl overflow-hidden shadow-sm flex items-center p-3 border border-outline-variant/10 gap-4 group">
                   <div className="w-24 h-24 rounded-xl overflow-hidden bg-surface-container shrink-0">
                     <img 
-                      src={`https://picsum.photos/seed/${item.id}/200`} 
+                      src={item.imageUrl || `https://picsum.photos/seed/${item.id}/200`} 
                       alt={item.name} 
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" 
                     />
@@ -91,7 +92,7 @@ export const OrderSnacks: React.FC = () => {
                     <h3 className="font-headline font-bold text-primary truncate">{item.name}</h3>
                     <p className="text-xs text-on-surface-variant line-clamp-1 mb-2">{item.description}</p>
                     <div className="flex items-center justify-between">
-                      <span className="font-headline font-bold text-secondary">${item.price.toFixed(2)}</span>
+                      <span className="font-headline font-bold text-secondary">₹{item.price.toFixed(2)}</span>
                       
                       <div className="flex items-center gap-1">
                         {quantity > 0 ? (
@@ -139,7 +140,7 @@ export const OrderSnacks: React.FC = () => {
                     </div>
                     <div className="text-left">
                       <p className="text-xs font-bold opacity-70 uppercase tracking-widest">Review Cart</p>
-                      <p className="font-bold">{cart.items.length} items • ${total.toFixed(2)}</p>
+                      <p className="font-bold">{cart.items.length} items • ₹{total.toFixed(2)}</p>
                     </div>
                   </div>
                   <ChevronRight size={24} className="relative z-10 group-hover:translate-x-1 transition-transform" />
@@ -214,13 +215,13 @@ export const OrderSnacks: React.FC = () => {
               {cartItems.map(item => (
                 <div key={item.id} className="flex justify-between items-center text-sm">
                   <span className="font-bold text-primary">{item.quantity}x {item.name}</span>
-                  <span className="font-bold text-on-surface-variant">${(item.price * item.quantity).toFixed(2)}</span>
+                  <span className="font-bold text-on-surface-variant">₹{(item.price * item.quantity).toFixed(2)}</span>
                 </div>
               ))}
               <div className="h-px bg-outline-variant/10 my-1" />
               <div className="flex justify-between items-center text-lg font-headline font-extrabold text-primary">
                 <span>Total</span>
-                <span className="text-secondary">${total.toFixed(2)}</span>
+                <span className="text-secondary">₹{total.toFixed(2)}</span>
               </div>
             </div>
           </div>
@@ -240,7 +241,7 @@ export const OrderSnacks: React.FC = () => {
               disabled={cart.serviceMode === 'InSeat' && !seatInput}
               className="w-full bg-primary text-white py-5 rounded-3xl font-headline font-bold text-xl shadow-xl shadow-primary/20 active:scale-[0.98] transition-all disabled:opacity-50 disabled:scale-100"
             >
-              Place Order • ${total.toFixed(2)}
+              Place Order • ₹{total.toFixed(2)}
             </button>
             <p className="text-center text-[10px] text-on-surface-variant font-medium px-8 opacity-60">
               By placing the order, you agree to our stadium service terms. Mock payment simulated for demo purposes.

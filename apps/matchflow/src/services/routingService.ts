@@ -69,7 +69,7 @@ export function calculateRoute(
       distance: s.weight * 100,
       zoneId: s.nodeId
     })),
-    totalTime: result.totalTime,
+    totalTime: result.totalWeight,
     status: result.status === 'Safe' ? 'Clear' : result.status,
     explanation: result.explanation
   };

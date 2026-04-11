@@ -27,8 +27,6 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({ onNavigate }) => {
   const { match, amenities, amenityLiveStates, activeScenario, connectivity, lastSyncTime } = useMatchFlow();
 
   const isOffline = connectivity === 'Offline';
-
-  const isOffline = connectivity === 'Offline';
   const isWeak = connectivity === 'Weak';
 
   const enhancedAmenities = selectNearbyAmenitiesWithLiveState(amenities, amenityLiveStates);
@@ -165,7 +163,7 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({ onNavigate }) => {
           </div>
           <div>
             <div className="text-[9px] font-black uppercase tracking-widest text-outline">Your Seat</div>
-            <div className="text-sm font-black text-primary">Row 12, Block G</div>
+            <div className="text-sm font-black text-primary">{useMatchFlow().fanSeat}</div>
           </div>
         </div>
         <div className="bg-white rounded-[2rem] p-5 shadow-sm border border-outline-variant/10 flex items-center gap-4">
@@ -207,7 +205,11 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({ onNavigate }) => {
 
         <div className="space-y-5">
           {enhancedAmenities.slice(0, 3).map((amenity, idx) => (
-            <div key={amenity.id} className={cn("group cursor-pointer", amenity.isStale && "stale-filter")}>
+            <div 
+              key={amenity.id} 
+              onClick={() => onNavigate('Order')}
+              className={cn("group cursor-pointer", amenity.isStale && "stale-filter")}
+            >
               <div className="flex items-center gap-4 mb-2">
                 <div className="w-12 h-12 rounded-2xl bg-surface-container overflow-hidden ring-2 ring-primary/5 group-hover:ring-primary/20 transition-all">
                   {amenity.image ? (

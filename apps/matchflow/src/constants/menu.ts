@@ -7,6 +7,7 @@ export const MENU_ITEMS: MenuProduct[] = [
     description: 'Authentic Indian spiced tea with ginger and cardamom.',
     price: 40,
     category: 'Drinks',
+    imageUrl: '/images/p1.png'
   },
   {
     id: 'p2',
@@ -14,6 +15,7 @@ export const MENU_ITEMS: MenuProduct[] = [
     description: 'Crispy pastry filled with spiced potatoes and peas.',
     price: 60,
     category: 'Snacks',
+    imageUrl: '/images/p2.png'
   },
   {
     id: 'p3',
@@ -21,6 +23,7 @@ export const MENU_ITEMS: MenuProduct[] = [
     description: 'Freshly popped corn with premium butter.',
     price: 120,
     category: 'Snacks',
+    imageUrl: '/images/p3.png'
   },
   {
     id: 'p4',
@@ -28,6 +31,7 @@ export const MENU_ITEMS: MenuProduct[] = [
     description: 'Refreshing carbonated beverage (Coke/Pepsi).',
     price: 80,
     category: 'Drinks',
+    imageUrl: '/images/p4.png'
   },
   {
     id: 'p5',
@@ -35,6 +39,7 @@ export const MENU_ITEMS: MenuProduct[] = [
     description: 'Spicy potato fritter in a bun with dry garlic chutney.',
     price: 90,
     category: 'Snacks',
+    imageUrl: '/images/p5.png'
   },
   {
     id: 'p6',
@@ -42,6 +47,7 @@ export const MENU_ITEMS: MenuProduct[] = [
     description: '2 Samosas, 1 Butter Popcorn, and 2 Masala Chais.',
     price: 250,
     category: 'Combos',
+    imageUrl: '/images/p6.png'
   }
 ];
 

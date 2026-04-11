@@ -1,11 +1,14 @@
 import React from 'react';
 import { useMatchFlow } from '../../context/MatchFlowContext';
 import { motion, AnimatePresence } from 'motion/react';
-import { CheckCircle2, Clock, Package, MapPin, AlertCircle, ShoppingBag, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Clock, Package, MapPin, AlertCircle, ShoppingBag, ArrowRight, ChevronRight } from 'lucide-react';
 import { Order, OrderStatus } from '../../types';
 
-export const OrderTracking: React.FC = () => {
-  const { orders, connectivity, pendingSyncOrders } = useMatchFlow();
+interface OrderTrackingProps {
+  onBack?: () => void;
+}
+export const OrderTracking: React.FC<OrderTrackingProps> = ({ onBack }) => {
+  const { orders, connectivity, pendingSyncOrders, lastSyncTime } = useMatchFlow();
 
   if (orders.length === 0) {
     return (
@@ -44,7 +47,14 @@ export const OrderTracking: React.FC = () => {
   return (
     <div className="space-y-6 pb-8">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-2xl font-headline font-extrabold text-primary">Order Status</h2>
+        <div className="flex items-center gap-4">
+          {onBack && (
+            <button onClick={onBack} className="p-2 bg-surface-container rounded-xl text-primary">
+              <ChevronRight size={20} className="rotate-180" />
+            </button>
+          )}
+          <h2 className="text-2xl font-headline font-extrabold text-primary">Order Status</h2>
+        </div>
         <div className="bg-surface-container px-3 py-1 rounded-full text-[10px] font-bold text-on-surface-variant uppercase tracking-widest">
           ID: {activeOrder.id}
         </div>
@@ -134,19 +144,22 @@ export const OrderTracking: React.FC = () => {
           {activeOrder.items.map(item => (
             <div key={item.id} className="flex justify-between items-center text-sm">
               <span className="text-on-surface-variant font-medium">{item.quantity}x {item.name}</span>
-              <span className="text-primary font-bold">${(item.price * item.quantity).toFixed(2)}</span>
+              <span className="text-primary font-bold">₹{(item.price * item.quantity).toFixed(2)}</span>
             </div>
           ))}
           <div className="h-px bg-outline-variant/10 my-1" />
           <div className="flex justify-between items-center font-bold text-primary">
             <span>Total Amount</span>
-            <span>${activeOrder.total.toFixed(2)}</span>
+            <span>₹{activeOrder.total.toFixed(2)}</span>
           </div>
         </div>
       </div>
 
       {activeOrder.status === 'Completed' && (
-        <button className="w-full bg-primary text-white py-4 rounded-2xl font-headline font-bold flex items-center justify-center gap-2 group">
+        <button 
+          onClick={onBack}
+          className="w-full bg-primary text-white py-4 rounded-2xl font-headline font-bold flex items-center justify-center gap-2 group"
+        >
           Order Another
           <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
         </button>

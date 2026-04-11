@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { AppState, ScenarioType, Zone, Amenity, Alert, Order, MatchState, CongestionBand, ZoneLiveState, AmenityLiveState, MenuProduct, ServiceMode } from '../types';
 import { INITIAL_ZONES, INITIAL_AMENITIES, INITIAL_PATHS, INITIAL_MATCH } from '../constants';
 import { LiveStateService } from '../services/liveStateService';
-import { updateCartItem, placeOrder, createInitialCart } from '../services/orderService';
+import { updateCartItem, placeOrder, createInitialCart, progressOrder } from '../services/orderService';
 import { EmergencyService } from '../services/emergencyService';
 import { ConnectivityService } from '../services/connectivityService';
 import { SyncService } from '../services/syncService';
@@ -34,15 +34,7 @@ const MatchFlowContext = createContext<MatchFlowContextType | undefined>(undefin
 
 export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, setState] = useState<AppState>(() => {
-    const saved = localStorage.getItem('matchflow_state');
-    if (saved) {
-      try {
-        return JSON.parse(saved);
-      } catch (e) {
-        console.error('Failed to parse saved state', e);
-      }
-    }
-    return {
+    const initialState: AppState = {
       role: 'Fan',
       connectivity: 'Connected',
       activeScenario: 'Normal',
@@ -52,14 +44,28 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       paths: INITIAL_PATHS,
       alerts: [],
       orders: [],
+      cart: createInitialCart(),
+      pendingSyncOrders: [],
       match: INITIAL_MATCH,
       fanLocation: 'z1',
+      fanSeat: 'Row 12, Block G',
       lastSyncTime: new Date().toISOString(),
       liveStates: {},
       amenityLiveStates: {},
       currentEmergency: EmergencyService.getInstance().getEmergencyState(),
       activeClosures: EmergencyService.getInstance().getActiveClosures(),
     };
+
+    const saved = localStorage.getItem('matchflow_state');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return { ...initialState, ...parsed };
+      } catch (e) {
+        console.error('Failed to parse saved state', e);
+      }
+    }
+    return initialState;
   });
 
   const [liveStates, setLiveStates] = useState<Record<string, ZoneLiveState>>({});
@@ -110,10 +116,34 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       });
     }, 1000);
 
+    // Simulated Order Lifecycle
+    const orderInterval = setInterval(() => {
+      setState(s => {
+        if (s.orders.length === 0) return s;
+        
+        let changed = false;
+        const nextOrders = s.orders.map(order => {
+          // Progress 'Confirmed' or 'Preparing' or 'Ready'
+          if (order.status === 'Confirmed' || order.status === 'Preparing' || order.status === 'Ready') {
+            // ~20% chance to progress every 5 seconds
+            if (Math.random() > 0.8) {
+              changed = true;
+              return progressOrder(order);
+            }
+          }
+          return order;
+        });
+
+        if (!changed) return s;
+        return { ...s, orders: nextOrders };
+      });
+    }, 5000);
+
     return () => {
       unsubZones();
       unsubAmenities();
       clearInterval(interval);
+      clearInterval(orderInterval);
     };
   }, []);
 
@@ -256,6 +286,7 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       pendingSyncOrders: [],
       match: INITIAL_MATCH,
       fanLocation: 'z1',
+      fanSeat: 'Row 12, Block G',
       lastSyncTime: new Date().toISOString(),
     });
   };

@@ -163,7 +163,7 @@ export const Amenities: React.FC<AmenitiesProps> = ({ onNavigate }) => {
                       </span>
                       <span className="flex items-center gap-1">
                         <Clock size={12} />
-                        {formatRelativeTime(amenity.updatedAt)}
+                        {formatRelativeTime(amenity.liveUpdatedAt)}
                       </span>
                     </div>
                   </div>
@@ -259,14 +259,14 @@ export const Amenities: React.FC<AmenitiesProps> = ({ onNavigate }) => {
                   </div>
                 </div>
 
-                {amenity.stalenessLevel === 'Stale' && (
+                {selectedAmenity.stalenessLevel === 'Stale' && (
                   <div className="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-200 flex items-center gap-3 text-amber-800">
                     <AlertCircle size={20} />
                     <p className="text-xs font-bold">Data is stale. Showing occupancy band instead of exact minutes.</p>
                   </div>
                 )}
 
-                {amenity.stalenessLevel === 'Historical' && (
+                {selectedAmenity.stalenessLevel === 'Historical' && (
                   <div className="mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center gap-3 text-slate-800">
                     <Clock size={20} />
                     <p className="text-xs font-bold">Showing historical data. Connection weak or lost.</p>

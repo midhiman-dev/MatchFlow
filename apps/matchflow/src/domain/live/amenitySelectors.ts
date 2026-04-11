@@ -14,7 +14,7 @@ export interface EnhancedAmenity extends Amenity {
   liveStatus: AmenityStatus | CongestionBand;
   isStale: boolean;
   stalenessLevel: 'Fresh' | 'Stale' | 'Historical';
-  updatedAt?: number;
+  liveUpdatedAt?: number;
   recommendationReason?: string;
 }
 
@@ -66,7 +66,7 @@ export const selectNearbyAmenitiesWithLiveState = (
       liveStatus,
       isStale,
       stalenessLevel,
-      updatedAt: liveState?.updatedAt
+      liveUpdatedAt: liveState?.updatedAt
     };
   });
 };

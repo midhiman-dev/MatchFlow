@@ -28,7 +28,6 @@ import {
   AmenityLiveState,
   AmenityStatus,
   FlowDirection, 
-  FlowDirection, 
   HotspotSummary,
   EmergencyState,
   LiveClosure,
@@ -109,5 +108,6 @@ export interface AppState {
   currentEmergency: EmergencyState;
   activeClosures: LiveClosure[];
   fanLocation: string; // zoneId
+  fanSeat: string;
   lastSyncTime: string | null;
 }
