@@ -62,10 +62,10 @@ export class RoutingEngine {
     const { distances, previous, explanations } = this.dijkstra(startNodeId, policy);
 
     if (distances[endNodeId] === Infinity) {
-      const closureExplanations = explanations.filter(e => e.includes('closed'));
+      const closureExplanations = explanations.filter(e => e.toLowerCase().includes('closed'));
       const mainReason = closureExplanations.length > 0 
-        ? `Route blocked by closures: ${closureExplanations.join(', ')}` 
-        : 'No traversable path found to destination.';
+        ? `Route blocked by closures: ${closureExplanations[0]}` 
+        : 'Emergency safety protocols blocking current path.';
       
       return this.blockedResult(mainReason, policy);
     }

@@ -178,20 +178,24 @@ export const OpsApp: React.FC = () => {
                       referrerPolicy="no-referrer"
                     />
                     {/* Simulated Heatmap Overlays */}
-                    {zones.map((z, i) => (
-                      <div 
-                        key={z.id}
-                        className={cn(
-                          "absolute w-12 h-12 rounded-full blur-xl transition-all duration-1000",
-                          z.congestionBand === 'Critical' ? "bg-error/60 scale-150" : 
-                          z.congestionBand === 'High' ? "bg-secondary/40 scale-125" : "bg-emerald-500/20"
-                        )}
-                        style={{ 
-                          top: `${20 + (i * 15) % 60}%`, 
-                          left: `${10 + (i * 25) % 80}%` 
-                        }}
-                      />
-                    ))}
+                    {zones.map((z, i) => {
+                      const live = liveStates[z.id];
+                      const status = live?.status || (z.densityScore >= 0.7 ? 'high' : 'low');
+                      return (
+                        <div 
+                          key={z.id}
+                          className={cn(
+                            "absolute w-12 h-12 rounded-full blur-xl transition-all duration-1000",
+                            status === 'critical' ? "bg-error/60 scale-150" : 
+                            status === 'high' ? "bg-secondary/40 scale-125" : "bg-emerald-500/20"
+                          )}
+                          style={{ 
+                            top: `${20 + (i * 15) % 60}%`, 
+                            left: `${10 + (i * 25) % 80}%` 
+                          }}
+                        />
+                      );
+                    })}
                   </div>
                 </div>
 
