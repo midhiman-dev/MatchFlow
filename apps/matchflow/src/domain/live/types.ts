@@ -48,3 +48,57 @@ export interface HotspotSummary {
     density: number;
   }>;
 }
+
+/**
+ * Global emergency status.
+ */
+export type EmergencyLevel = 'notice' | 'warning' | 'critical';
+
+export interface EmergencyState {
+  active: boolean;
+  level: EmergencyLevel;
+  message: string;
+  updatedAt: number;
+}
+
+/**
+ * Live closure record for sync.
+ */
+export interface LiveClosure {
+  targetId: string;
+  targetType: 'zone' | 'path';
+  reason: string;
+  timestamp: number;
+}
+
+/**
+ * Structured operator command for safety actions.
+ */
+export type CommandType = 'activateEmergency' | 'clearEmergency' | 'closePath' | 'closeZone' | 'openPath' | 'openZone';
+
+export interface SafetyCommand {
+  id: string;
+  type: CommandType;
+  targetId?: string; // ID of path or zone
+  level?: EmergencyLevel;
+  message?: string;
+  reason: string;
+  operatorId: string;
+  timestamp: number;
+  status: 'pending' | 'confirmed' | 'applied' | 'failed';
+}
+
+/**
+ * Audit record for durable storage (Firestore).
+ */
+export interface SafetyAuditLog {
+  id: string;
+  commandId: string;
+  operatorId: string;
+  action: CommandType;
+  targetId?: string;
+  reason: string;
+  timestamp: number;
+  previousState?: any;
+  newState?: any;
+}
