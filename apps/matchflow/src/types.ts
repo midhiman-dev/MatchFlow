@@ -28,7 +28,14 @@ import {
   AmenityLiveState,
   AmenityStatus,
   FlowDirection, 
-  HotspotSummary 
+  FlowDirection, 
+  HotspotSummary,
+  EmergencyState,
+  LiveClosure,
+  SafetyCommand,
+  SafetyAuditLog,
+  EmergencyLevel,
+  CommandType
 } from './domain/live/types';
 
 export type { 
@@ -37,7 +44,13 @@ export type {
   AmenityLiveState,
   AmenityStatus,
   FlowDirection, 
-  HotspotSummary 
+  HotspotSummary,
+  EmergencyState,
+  LiveClosure,
+  SafetyCommand,
+  SafetyAuditLog,
+  EmergencyLevel,
+  CommandType
 };
 
 
@@ -93,6 +106,8 @@ export interface AppState {
   pendingSyncOrders: Order[]; // Orders queued while offline
   liveStates: Record<string, ZoneLiveState>;
   amenityLiveStates: Record<string, AmenityLiveState>;
+  currentEmergency: EmergencyState;
+  activeClosures: LiveClosure[];
   fanLocation: string; // zoneId
   lastSyncTime: string | null;
 }

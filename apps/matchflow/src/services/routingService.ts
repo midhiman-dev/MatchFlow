@@ -30,15 +30,21 @@ export function calculateRoute(
   paths: Path[],
   policy: RoutePolicy = 'Normal'
 ): RouteResult {
-  // Construct a temporary graph if needed, but we usually use the seed for now
-  // For the MVP, we use the MATCHFLOW_STADIUM_GRAPH which is the source of truth
-  const engine = new RoutingEngine(MATCHFLOW_STADIUM_GRAPH);
+  // Construct a temporary graph using the live state from context
+  const graph: VenueGraph = {
+    nodes: zones, // simplified: all zones/amenities are nodes
+    zones,
+    amenities: [], // amenities should be nodes too if we want to route to them
+    paths
+  };
+
+  const engine = new RoutingEngine(graph);
   const result = engine.calculateRoute(startZoneId, endZoneId, policy);
 
   return {
     steps: result.steps.map(s => ({
       instruction: s.instruction,
-      distance: s.weight * 100, // Conversion to arbitrary distance for UI
+      distance: s.weight * 100,
       zoneId: s.nodeId
     })),
     totalTime: result.totalWeight,

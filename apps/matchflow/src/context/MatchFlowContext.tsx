@@ -4,6 +4,7 @@ import { AppState, ScenarioType, Zone, Amenity, Alert, Order, MatchState, Conges
 import { INITIAL_ZONES, INITIAL_AMENITIES, INITIAL_PATHS, INITIAL_MATCH } from '../constants';
 import { LiveStateService } from '../services/liveStateService';
 import { updateCartItem, placeOrder, createInitialCart } from '../services/orderService';
+import { EmergencyService } from '../services/emergencyService';
 
 interface MatchFlowContextType extends AppState {
   setRole: (role: AppState['role']) => void;
@@ -53,6 +54,8 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       lastSyncTime: new Date().toISOString(),
       liveStates: {},
       amenityLiveStates: {},
+      currentEmergency: EmergencyService.getInstance().getEmergencyState(),
+      activeClosures: EmergencyService.getInstance().getActiveClosures(),
     };
   });
 
@@ -68,9 +71,35 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       setAmenityLiveStates(states);
     });
 
+    // For the MVP, we poll the emergency service or ideally would subscribe
+    const interval = setInterval(() => {
+      const service = EmergencyService.getInstance();
+      const emergency = service.getEmergencyState();
+      const closures = service.getActiveClosures();
+      
+      setState(s => {
+        const closureIds = new Set(closures.map(c => c.targetId));
+        return {
+          ...s,
+          currentEmergency: emergency,
+          activeClosures: closures,
+          emergencyActive: emergency.active,
+          zones: s.zones.map(z => ({
+            ...z,
+            status: closureIds.has(z.id) ? 'closed' : (z.status === 'emergency' && !emergency.active ? 'open' : z.status)
+          })),
+          paths: s.paths.map(p => ({
+            ...p,
+            status: closureIds.has(p.id) ? 'closed' : 'open'
+          }))
+        };
+      });
+    }, 1000);
+
     return () => {
       unsubZones();
       unsubAmenities();
+      clearInterval(interval);
     };
   }, []);
 
@@ -103,6 +132,20 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         newState.zones = s.zones.map(z => z.id === 'z1' ? { ...z, congestionBand: 'Critical', densityScore: 0.98 } : z);
         newState.match = { ...s.match, moment: 'Wicket Surge' };
       } else if (scenario === 'Emergency') {
+        const service = EmergencyService.getInstance();
+        const cmd = service.createCommand('activateEmergency', 'system-sim', {
+          level: 'critical',
+          message: 'Path blocked in South Concourse. Follow directed route to Gate D.',
+          reason: 'Simulation Trigger'
+        });
+        service.confirmCommand(cmd.id);
+
+        const closureCmd = service.createCommand('closeZone', 'system-sim', {
+          targetId: 'z6',
+          reason: 'Emergency Simulation'
+        });
+        service.confirmCommand(closureCmd.id);
+
         newState.emergencyActive = true;
         newState.zones = s.zones.map(z => z.id === 'z6' ? { ...z, status: 'emergency', congestionBand: 'Critical' } : z);
         newState.alerts = [
@@ -110,6 +153,14 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
           ...s.alerts
         ];
       } else if (scenario === 'Normal') {
+        const service = EmergencyService.getInstance();
+        const cmd = service.createCommand('clearEmergency', 'system-sim', { reason: 'Reset to Normal' });
+        service.confirmCommand(cmd.id);
+
+        // Open z6 if it was closed
+        const openCmd = service.createCommand('openZone', 'system-sim', { targetId: 'z6', reason: 'Reset to Normal' });
+        service.confirmCommand(openCmd.id);
+
         newState.zones = INITIAL_ZONES;
         newState.match = INITIAL_MATCH;
         newState.emergencyActive = false;

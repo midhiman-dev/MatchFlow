@@ -9,6 +9,7 @@ import { EmergencyView } from './fan/EmergencyView';
 import { FanBottomNav } from '../components/FanBottomNav';
 import { FanHeader } from '../components/FanHeader';
 import { ConnectivityOverlay } from '../components/ConnectivityOverlay';
+import { EmergencyBanner } from '../components/EmergencyBanner';
 import { AnimatePresence, motion } from 'motion/react';
 import { cn } from '../utils/cn';
 
@@ -29,7 +30,12 @@ export const FanApp: React.FC = () => {
   const direction = tabOrder.indexOf(activeTab) > tabOrder.indexOf(prevTab) ? 1 : -1;
 
   if (emergencyActive) {
-    return <EmergencyView />;
+    return (
+      <div className="min-h-screen bg-surface-container-low">
+        <EmergencyBanner />
+        <EmergencyView />
+      </div>
+    );
   }
 
   return (
@@ -37,6 +43,7 @@ export const FanApp: React.FC = () => {
       {/* Global Shell Components */}
       <FanHeader />
       <ConnectivityOverlay />
+      <EmergencyBanner />
       
       {/* Main Content Area */}
       <main className="flex-1 w-full max-w-lg mx-auto relative mt-20 pb-28">

@@ -5,7 +5,7 @@ import { motion } from 'motion/react';
 import { AlertTriangle, Navigation, Phone, ShieldAlert, ArrowRight } from 'lucide-react';
 
 export const EmergencyView: React.FC = () => {
-  const { alerts, fanLocation, zones } = useMatchFlow();
+  const { alerts, fanLocation, zones, currentEmergency } = useMatchFlow();
   const emergencyAlert = alerts.find(a => a.type === 'Emergency');
   const currentZone = zones.find(z => z.id === fanLocation);
 
@@ -25,13 +25,15 @@ export const EmergencyView: React.FC = () => {
           <p className="text-xl font-bold opacity-90">Please follow directed evacuation routes immediately.</p>
         </div>
 
-        {emergencyAlert && (
+        {(currentEmergency.active || emergencyAlert) && (
           <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 w-full max-w-md text-left">
             <div className="flex items-center gap-2 mb-2">
               <ShieldAlert size={18} />
               <span className="text-[10px] font-black uppercase tracking-widest">Official Instruction</span>
             </div>
-            <p className="text-lg font-bold leading-tight">{emergencyAlert.message}</p>
+            <p className="text-lg font-bold leading-tight">
+              {currentEmergency.active ? currentEmergency.message : emergencyAlert?.message}
+            </p>
           </div>
         )}
 

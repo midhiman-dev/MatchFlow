@@ -11,14 +11,14 @@ function cn(...inputs: ClassValue[]) {
 }
 
 export const StewardApp: React.FC = () => {
-  const { emergencyActive, alerts, zones } = useMatchFlow();
+  const { emergencyActive, alerts, zones, activeClosures, currentEmergency } = useMatchFlow();
   const emergencyAlert = alerts.find(a => a.type === 'Emergency');
 
   return (
     <div className="min-h-screen bg-slate-900 text-white p-6 pb-24">
       <header className="flex justify-between items-center mb-8">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-amber-500 flex items-center justify-center text-slate-900 shadow-lg shadow-amber-500/20">
+          <div className="w-12 h-12 rounded-2xl bg-on-error flex items-center justify-center text-error shadow-lg shadow-error/20">
             <Shield size={28} />
           </div>
           <div>
@@ -28,35 +28,59 @@ export const StewardApp: React.FC = () => {
         </div>
         <div className="bg-emerald-500/10 text-emerald-500 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-emerald-500/20 flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          Online
+          Live
         </div>
       </header>
 
-      {emergencyActive ? (
+      {(emergencyActive || activeClosures.length > 0) ? (
         <motion.div 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-error rounded-3xl p-6 space-y-6 shadow-2xl shadow-error/20"
+          className={cn(
+            "rounded-3xl p-6 space-y-6 shadow-2xl transition-colors duration-500",
+            emergencyActive ? "bg-error shadow-error/20" : "bg-amber-500 text-slate-900 shadow-amber-500/20"
+          )}
         >
-          <div className="flex items-center gap-3">
-            <AlertTriangle size={32} />
-            <h2 className="text-2xl font-headline font-black uppercase">Priority Instruction</h2>
-          </div>
-          <p className="text-xl font-bold leading-tight">
-            {emergencyAlert?.message || "Direct all fans in North Stand to Gate D immediately. Block Concourse Path P7."}
-          </p>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-white/10 rounded-2xl p-4">
-              <p className="text-[10px] font-black uppercase opacity-60 mb-1">Target Gate</p>
-              <p className="text-2xl font-bold">GATE D</p>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <AlertTriangle size={32} />
+              <h2 className="text-2xl font-headline font-black uppercase tracking-tight">Instruction</h2>
             </div>
-            <div className="bg-white/10 rounded-2xl p-4">
-              <p className="text-[10px] font-black uppercase opacity-60 mb-1">Status</p>
-              <p className="text-2xl font-bold">CRITICAL</p>
-            </div>
+            <span className="text-[10px] font-black opacity-60">
+              {new Date(currentEmergency.updatedAt).toLocaleTimeString()}
+            </span>
           </div>
-          <button className="w-full bg-white text-error py-4 rounded-2xl font-bold text-lg shadow-lg active:scale-95 transition-transform">
-            Acknowledge Instruction
+
+          <div className="bg-black/10 rounded-2xl p-5 border border-white/10">
+            <p className="text-xl font-bold leading-tight italic">
+              "{currentEmergency.active ? currentEmergency.message : `${activeClosures.length} Operational Closures Active`}"
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            <p className="text-[10px] font-black uppercase tracking-widest opacity-60">Active Closures</p>
+            {activeClosures.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {activeClosures.map(c => (
+                  <div key={c.targetId} className="bg-black/20 px-3 py-2 rounded-xl flex items-center gap-2 border border-white/10">
+                    <MapPin size={14} />
+                    <span className="text-xs font-bold uppercase tracking-wider">{zones.find(z => z.id === c.targetId)?.name || c.targetId}</span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm font-medium opacity-80">No specific area closures reported.</p>
+            )}
+          </div>
+
+          <button 
+            onClick={() => alert('Instruction Acknowledged')}
+            className={cn(
+              "w-full py-4 rounded-2xl font-black text-lg shadow-lg active:scale-95 transition-all",
+              emergencyActive ? "bg-white text-error" : "bg-slate-900 text-white"
+            )}
+          >
+            ACKNOWLEDGE ORDER
           </button>
         </motion.div>
       ) : (
