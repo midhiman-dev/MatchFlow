@@ -65,7 +65,7 @@ export const EmergencyView: React.FC = () => {
       <div className="mt-8 pb-4">
         <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest opacity-60 mb-4">
           <span>Current Location: {currentZone?.name}</span>
-          <span>Last Sync: Just Now</span>
+          <span>Emergency Cache: Active</span>
         </div>
         <button className="w-full bg-white text-error py-4 rounded-2xl font-headline font-black text-xl flex items-center justify-center gap-2 shadow-xl">
           Start Evacuation Route <ArrowRight size={24} />

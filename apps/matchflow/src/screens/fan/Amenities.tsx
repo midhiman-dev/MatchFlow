@@ -13,12 +13,15 @@ function cn(...inputs: ClassValue[]) {
 }
 
 // Utility to format relative time
+// Utility to format relative time
 const formatRelativeTime = (timestamp?: number) => {
-  if (!timestamp) return 'No data';
+  if (!timestamp) return 'No historical data';
   const seconds = Math.floor((Date.now() - timestamp) / 1000);
   if (seconds < 60) return 'Just now';
   const mins = Math.floor(seconds / 60);
-  return `${mins}m ago`;
+  if (mins < 60) return `${mins}m ago`;
+  const hours = Math.floor(mins / 60);
+  return `${hours}h ago`;
 };
 
 interface AmenitiesProps {
@@ -26,9 +29,11 @@ interface AmenitiesProps {
 }
 
 export const Amenities: React.FC<AmenitiesProps> = ({ onNavigate }) => {
-  const { amenities, amenityLiveStates } = useMatchFlow();
+  const { amenities, amenityLiveStates, connectivity } = useMatchFlow();
   const [filter, setFilter] = useState<'All' | 'Food' | 'Washroom' | 'FirstAid'>('All');
   const [selectedAmenity, setSelectedAmenity] = useState<EnhancedAmenity | null>(null);
+
+  const isOffline = connectivity === 'Offline';
 
   const enhancedAmenities = selectNearbyAmenitiesWithLiveState(amenities, amenityLiveStates);
   
@@ -129,7 +134,8 @@ export const Amenities: React.FC<AmenitiesProps> = ({ onNavigate }) => {
               onClick={() => setSelectedAmenity(amenity)}
               className={cn(
                 "group relative bg-white rounded-2xl overflow-hidden shadow-sm border border-outline-variant/10 transition-all hover:shadow-md cursor-pointer",
-                amenity.isRecommended && "border-l-4 border-secondary"
+                amenity.isRecommended && !amenity.isStale && "border-l-4 border-secondary",
+                amenity.isStale && "stale-filter"
               )}
             >
               <div className="p-5 flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -157,7 +163,7 @@ export const Amenities: React.FC<AmenitiesProps> = ({ onNavigate }) => {
                       </span>
                       <span className="flex items-center gap-1">
                         <Clock size={12} />
-                        {formatRelativeTime(liveState?.updatedAt)}
+                        {formatRelativeTime(amenity.updatedAt)}
                       </span>
                     </div>
                   </div>
@@ -172,7 +178,9 @@ export const Amenities: React.FC<AmenitiesProps> = ({ onNavigate }) => {
                       amenity.liveStatus === 'critical' || amenity.liveStatus === 'Critical' ? "text-error" : 
                       amenity.liveStatus === 'high' || amenity.liveStatus === 'High' ? "text-secondary" : "text-amber-500"
                     )}>
-                      {amenity.liveQueueMinutes !== undefined ? `${amenity.liveQueueMinutes}m` : amenity.liveStatus}
+                      {amenity.liveQueueMinutes !== undefined ? `${amenity.liveQueueMinutes}m` : (
+                        <span className="text-sm opacity-80 uppercase tracking-tighter">{amenity.liveStatus}</span>
+                      )}
                       <div className="flex gap-0.5 ml-1">
                         <div className={cn("w-1 h-3 rounded-full", (amenity.liveStatus as string).toLowerCase() !== 'low' ? "bg-primary/20" : "bg-emerald-500")} />
                         <div className={cn("w-1 h-3 rounded-full", ['moderate', 'high', 'critical'].includes((amenity.liveStatus as string).toLowerCase()) ? "bg-amber-500" : "bg-primary/20")} />
@@ -251,10 +259,17 @@ export const Amenities: React.FC<AmenitiesProps> = ({ onNavigate }) => {
                   </div>
                 </div>
 
-                {selectedAmenity.isStale && (
-                  <div className="mb-6 p-4 rounded-2xl bg-error/5 border border-error/10 flex items-center gap-3 text-error">
+                {amenity.stalenessLevel === 'Stale' && (
+                  <div className="mb-6 p-4 rounded-2xl bg-amber-50 border border-amber-200 flex items-center gap-3 text-amber-800">
                     <AlertCircle size={20} />
-                    <p className="text-xs font-bold">Data is stale. Exact minutes hidden.</p>
+                    <p className="text-xs font-bold">Data is stale. Showing occupancy band instead of exact minutes.</p>
+                  </div>
+                )}
+
+                {amenity.stalenessLevel === 'Historical' && (
+                  <div className="mb-6 p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center gap-3 text-slate-800">
+                    <Clock size={20} />
+                    <p className="text-xs font-bold">Showing historical data. Connection weak or lost.</p>
                   </div>
                 )}
 

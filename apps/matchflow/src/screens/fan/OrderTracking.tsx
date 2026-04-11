@@ -151,6 +151,12 @@ export const OrderTracking: React.FC = () => {
           <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
         </button>
       )}
+      {activeOrder.status !== 'Completed' && (
+        <div className="pt-4 flex items-center justify-center gap-2 text-[10px] text-on-surface-variant/40 font-bold uppercase tracking-widest">
+          <Clock size={10} />
+          Last update: {new Date(lastSyncTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+        </div>
+      )}
     </div>
   );
 };

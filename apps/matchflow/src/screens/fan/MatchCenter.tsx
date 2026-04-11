@@ -17,16 +17,21 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { cn } from '../../utils/cn';
+import { selectNearbyAmenitiesWithLiveState } from '../../domain/live/amenitySelectors';
 
 interface MatchCenterProps {
   onNavigate: (tab: FanTab) => void;
 }
 
 export const MatchCenter: React.FC<MatchCenterProps> = ({ onNavigate }) => {
-  const { match, amenities, activeScenario, connectivity, lastSyncTime } = useMatchFlow();
+  const { match, amenities, amenityLiveStates, activeScenario, connectivity, lastSyncTime } = useMatchFlow();
+
+  const isOffline = connectivity === 'Offline';
 
   const isOffline = connectivity === 'Offline';
   const isWeak = connectivity === 'Weak';
+
+  const enhancedAmenities = selectNearbyAmenitiesWithLiveState(amenities, amenityLiveStates);
 
   return (
     <div className="space-y-6 pb-8">
@@ -185,15 +190,18 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({ onNavigate }) => {
           </div>
           <button 
             onClick={() => onNavigate('Amenities')}
-            className="text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary flex items-center gap-1"
+            className={cn(
+              "text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary flex items-center gap-1",
+              isOffline && "opacity-50"
+            )}
           >
             Manage <ChevronRight size={14} />
           </button>
         </div>
 
         <div className="space-y-5">
-          {amenities.slice(0, 3).map((amenity, idx) => (
-            <div key={amenity.id} className="group cursor-pointer">
+          {enhancedAmenities.slice(0, 3).map((amenity, idx) => (
+            <div key={amenity.id} className={cn("group cursor-pointer", amenity.isStale && "stale-filter")}>
               <div className="flex items-center gap-4 mb-2">
                 <div className="w-12 h-12 rounded-2xl bg-surface-container overflow-hidden ring-2 ring-primary/5 group-hover:ring-primary/20 transition-all">
                   {amenity.image ? (
@@ -211,11 +219,11 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({ onNavigate }) => {
                       <span className={cn(
                         "text-[10px] font-black uppercase px-2 py-0.5 rounded-full",
                         isOffline ? "bg-slate-100 text-slate-500" :
-                        amenity.queueBand === 'Low' ? 'bg-emerald-100 text-emerald-700' : 
-                        amenity.queueBand === 'Moderate' ? 'bg-amber-100 text-amber-700' : 
+                        amenity.liveStatus === 'low' || amenity.liveStatus === 'Low' ? 'bg-emerald-100 text-emerald-700' : 
+                        amenity.liveStatus === 'moderate' || amenity.liveStatus === 'Moderate' ? 'bg-amber-100 text-amber-700' : 
                         'bg-rose-100 text-rose-700'
                       )}>
-                        {isOffline ? 'Offline' : amenity.queueBand === 'Low' ? 'Quick' : amenity.queueBand}
+                        {isOffline ? 'OFFLINE' : (amenity.liveStatus as string).toUpperCase()}
                       </span>
                     </div>
                   </div>
@@ -223,17 +231,17 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({ onNavigate }) => {
                     <div className="flex-1 h-1.5 bg-surface-container rounded-full overflow-hidden">
                       <motion.div 
                         initial={{ width: 0 }}
-                        animate={{ width: `${amenity.queueBand === 'Low' ? 20 : amenity.queueBand === 'Moderate' ? 55 : 90}%` }}
+                        animate={{ width: `${(amenity.liveStatus as string).toLowerCase() === 'low' ? 20 : (amenity.liveStatus as string).toLowerCase() === 'moderate' ? 55 : 90}%` }}
                         className={cn(
                           "h-full rounded-full transition-all duration-1000",
                           isOffline ? "bg-slate-300" :
-                          amenity.queueBand === 'Low' ? 'bg-emerald-500' : 
-                          amenity.queueBand === 'Moderate' ? 'bg-amber-500' : 'bg-rose-500'
+                          (amenity.liveStatus as string).toLowerCase() === 'low' ? 'bg-emerald-500' : 
+                          (amenity.liveStatus as string).toLowerCase() === 'moderate' ? 'bg-amber-500' : 'bg-rose-500'
                         )}
                       />
                     </div>
-                    <span className="text-[10px] font-bold text-on-surface-variant w-12 text-right">
-                      {isOffline ? '--' : `${amenity.queueMinutes}m`}
+                    <span className="text-[10px] font-bold text-on-surface-variant w-14 text-right">
+                      {amenity.liveQueueMinutes !== undefined ? `${amenity.liveQueueMinutes}m` : 'BAND'}
                     </span>
                   </div>
                 </div>

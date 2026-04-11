@@ -6,12 +6,15 @@
 import { Amenity, AmenityType, CongestionBand } from '../venue/types';
 import { AmenityLiveState, AmenityStatus } from './types';
 
-const STALE_THRESHOLD_MS = 5 * 60 * 1000; // 5 minutes
+const TIER_1_FRESH_MS = 3 * 60 * 1000; // 3 mins
+const TIER_2_STALE_MS = 10 * 60 * 1000; // 10 mins
 
 export interface EnhancedAmenity extends Amenity {
   liveQueueMinutes?: number;
   liveStatus: AmenityStatus | CongestionBand;
   isStale: boolean;
+  stalenessLevel: 'Fresh' | 'Stale' | 'Historical';
+  updatedAt?: number;
   recommendationReason?: string;
 }
 
@@ -25,19 +28,34 @@ export const selectNearbyAmenitiesWithLiveState = (
 ): EnhancedAmenity[] => {
   return amenities.map(amenity => {
     const liveState = liveStates[amenity.id];
-    const isStale = liveState ? (currentTime - liveState.updatedAt > STALE_THRESHOLD_MS) : true;
+    let stalenessLevel: 'Fresh' | 'Stale' | 'Historical' = 'Historical';
+    let isStale = true;
+
+    if (liveState) {
+      const age = currentTime - liveState.updatedAt;
+      if (age < TIER_1_FRESH_MS) {
+        stalenessLevel = 'Fresh';
+        isStale = false;
+      } else if (age < TIER_2_STALE_MS) {
+        stalenessLevel = 'Stale';
+        isStale = true;
+      } else {
+        stalenessLevel = 'Historical';
+        isStale = true;
+      }
+    }
 
     // Default to static domain model data
     let liveQueueMinutes: number | undefined = amenity.queueMinutes;
     let liveStatus: AmenityStatus | CongestionBand = amenity.queueBand;
 
     if (liveState) {
-      if (isStale) {
-        // Downgrade stale data: show band only, no exact minutes
-        liveQueueMinutes = undefined;
+      if (stalenessLevel === 'Fresh') {
+        liveQueueMinutes = liveState.queueMinutes;
         liveStatus = liveState.status;
       } else {
-        liveQueueMinutes = liveState.queueMinutes;
+        // Downgrade: show band only, hide exact minutes
+        liveQueueMinutes = undefined;
         liveStatus = liveState.status;
       }
     }
@@ -46,7 +64,9 @@ export const selectNearbyAmenitiesWithLiveState = (
       ...amenity,
       liveQueueMinutes,
       liveStatus,
-      isStale
+      isStale,
+      stalenessLevel,
+      updatedAt: liveState?.updatedAt
     };
   });
 };

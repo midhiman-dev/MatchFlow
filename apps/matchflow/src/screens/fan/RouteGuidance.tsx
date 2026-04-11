@@ -12,7 +12,7 @@ function cn(...inputs: ClassValue[]) {
 }
 
 export const RouteGuidance: React.FC = () => {
-  const { fanLocation, zones, paths, emergencyActive } = useMatchFlow();
+  const { fanLocation, zones, paths, emergencyActive, connectivity, lastSyncTime } = useMatchFlow();
   const [destinationId, setDestinationId] = useState<string>('z8'); // Default to Gate B
   const [isWalking, setIsWalking] = useState(false);
 
@@ -51,6 +51,13 @@ export const RouteGuidance: React.FC = () => {
           </div>
         </div>
       </div>
+      
+      {connectivity === 'Offline' && (
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex items-center gap-3 text-slate-700">
+          <Clock size={20} />
+          <p className="text-xs font-bold">Showing cached routing data. Path congestion metrics from {new Date(lastSyncTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.</p>
+        </div>
+      )}
 
       {/* Map HUD */}
       <div className="relative w-full aspect-[16/10] md:aspect-[21/9] bg-primary rounded-2xl overflow-hidden shadow-2xl group">
