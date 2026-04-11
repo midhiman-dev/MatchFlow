@@ -12,13 +12,13 @@ function cn(...inputs: ClassValue[]) {
 }
 
 export const RouteGuidance: React.FC = () => {
-  const { fanLocation, zones, paths, emergencyActive, connectivity, lastSyncTime } = useMatchFlow();
+  const { fanLocation, zones, paths, liveStates, emergencyActive, connectivity, lastSyncTime } = useMatchFlow();
   const [destinationId, setDestinationId] = useState<string>('z8'); // Default to Gate B
   const [isWalking, setIsWalking] = useState(false);
 
   const route = useMemo(() => 
-    calculateRoute(fanLocation, destinationId, zones, paths, emergencyActive ? 'Emergency' : 'Normal'),
-    [fanLocation, destinationId, zones, paths, emergencyActive]
+    calculateRoute(fanLocation, destinationId, zones, paths, liveStates, emergencyActive ? 'Emergency' : 'Normal'),
+    [fanLocation, destinationId, zones, paths, liveStates, emergencyActive]
   );
 
   const destinationZone = zones.find(z => z.id === destinationId);

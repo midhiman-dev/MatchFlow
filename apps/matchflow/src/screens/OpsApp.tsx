@@ -15,8 +15,12 @@ import {
   TrendingUp,
   Users,
   Clock,
-  ShieldAlert
+  ShieldAlert,
+  Zap
 } from 'lucide-react';
+import { SimulationLog } from '../components/operator/SimulationLog';
+import { SimulationService } from '../services/simulationService';
+import { ALL_SCENARIOS } from '../domain/simulation/scenarios';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { selectHotspotSummary, selectVisibleZoneStatus } from '../domain/live/selectors';
@@ -46,11 +50,15 @@ export const OpsApp: React.FC = () => {
   const [activeView, setActiveView] = useState<'Dashboard' | 'Simulator' | 'Zones'>('Dashboard');
 
   const scenarios = [
-    { id: 'Normal', label: 'Normal Play', icon: Play },
-    { id: 'InningsBreak', label: 'Innings Break', icon: Activity },
-    { id: 'WicketSurge', label: 'Wicket Surge', icon: TrendingUp },
-    { id: 'ExitRush', label: 'Exit Rush', icon: Users },
+    { id: 'Normal', label: 'Normal Play', icon: Play, color: 'text-emerald-500' },
+    { id: 'InningsBreak', label: 'Innings Break', icon: Activity, color: 'text-secondary' },
+    { id: 'DRSSpike', label: 'DRS Spike', icon: Zap, color: 'text-tertiary' },
+    { id: 'WicketSurge', label: 'Wicket Surge', icon: TrendingUp, color: 'text-secondary' },
+    { id: 'ExitRush', label: 'Exit Rush', icon: Users, color: 'text-primary' },
   ] as const;
+
+  const sim = SimulationService.getInstance();
+  const simStatus = sim.getStatus();
 
   return (
     <div className="min-h-screen bg-[#f8fafc] flex">
@@ -232,10 +240,10 @@ export const OpsApp: React.FC = () => {
                 <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-outline-variant/10">
                   <h3 className="text-xl font-headline font-black text-primary mb-6">Scenario Control</h3>
                   <div className="space-y-3">
-                    {scenarios.map(({ id, label, icon: Icon }) => (
+                    {scenarios.map(({ id, label, icon: Icon, color }) => (
                       <button
                         key={id}
-                        onClick={() => triggerScenario(id)}
+                        onClick={() => triggerScenario(id as any)}
                         className={cn(
                           "w-full flex items-center justify-between p-5 rounded-2xl font-bold transition-all border",
                           activeScenario === id 
@@ -243,13 +251,27 @@ export const OpsApp: React.FC = () => {
                             : "bg-surface-container-low text-primary border-outline-variant/10 hover:bg-white"
                         )}
                       >
-                        <div className="flex items-center gap-3">
-                          <Icon size={20} />
+                        <div className="flex items-center gap-3 text-sm">
+                          <Icon size={18} className={activeScenario === id ? "text-white" : color} />
                           {label}
                         </div>
                         {activeScenario === id && <div className="w-2 h-2 rounded-full bg-white animate-pulse" />}
                       </button>
                     ))}
+                  </div>
+                </div>
+
+                <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-outline-variant/10">
+                  <h3 className="text-xl font-headline font-black text-primary mb-6">Engine Stats</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/5">
+                      <p className="text-[10px] font-black text-outline uppercase">Active Ticks</p>
+                      <p className="text-xl font-bold text-primary">{simStatus.tickCount}</p>
+                    </div>
+                    <div className="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/5">
+                      <p className="text-[10px] font-black text-outline uppercase">Refresh Rate</p>
+                      <p className="text-xl font-bold text-primary">0.5Hz</p>
+                    </div>
                   </div>
                 </div>
 
@@ -276,24 +298,14 @@ export const OpsApp: React.FC = () => {
               <div className="col-span-2 bg-white rounded-[2.5rem] p-8 shadow-sm border border-outline-variant/10">
                 <div className="flex justify-between items-center mb-8">
                   <h3 className="text-xl font-headline font-black text-primary">Simulation Impact Log</h3>
-                  <button className="text-primary font-bold text-xs uppercase tracking-widest flex items-center gap-1">
-                    <RefreshCcw size={14} /> Clear Log
+                  <button 
+                    onClick={() => sim.reset()}
+                    className="text-primary font-bold text-xs uppercase tracking-widest flex items-center gap-1 hover:text-secondary transition-colors"
+                  >
+                    <RefreshCcw size={14} /> Global Reset
                   </button>
                 </div>
-                <div className="space-y-4 font-mono text-xs">
-                  <div className="p-4 rounded-xl bg-surface-container-low border-l-4 border-primary">
-                    <span className="text-outline">[14:52:10]</span> <span className="text-primary font-bold">SCENARIO_START:</span> InningsBreak initialized.
-                  </div>
-                  <div className="p-4 rounded-xl bg-surface-container-low border-l-4 border-secondary">
-                    <span className="text-outline">[14:52:15]</span> <span className="text-secondary font-bold">ZONE_UPDATE:</span> North Concourse density increased to 95%.
-                  </div>
-                  <div className="p-4 rounded-xl bg-surface-container-low border-l-4 border-tertiary">
-                    <span className="text-outline">[14:52:20]</span> <span className="text-tertiary font-bold">ALERT_PUBLISHED:</span> "Innings Break Soon" sent to 12,400 fans.
-                  </div>
-                  <div className="p-4 rounded-xl bg-surface-container-low border-l-4 border-emerald-500">
-                    <span className="text-outline">[14:52:25]</span> <span className="text-emerald-600 font-bold">ROUTE_RECOMPUTE:</span> 4,200 paths updated for optimal flow.
-                  </div>
-                </div>
+                <SimulationLog />
               </div>
             </motion.div>
           )}

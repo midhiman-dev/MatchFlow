@@ -4,8 +4,10 @@ import {
   RoutePolicy,
   VenueGraph,
   Zone,
-  Path
+  Path,
+  CongestionBand
 } from '../domain/venue';
+import { ZoneLiveState } from '../domain/live/types';
 
 export interface RouteStep {
   instruction: string;
@@ -20,6 +22,15 @@ export interface RouteResult {
   explanation?: string;
 }
 
+const statusToBand = (status: string): CongestionBand => {
+  switch (status) {
+    case 'critical': return 'Critical';
+    case 'high': return 'High';
+    case 'moderate': return 'Moderate';
+    default: return 'Low';
+  }
+};
+
 /**
  * Bridge function to connect the UI to the domain RoutingEngine.
  */
@@ -28,13 +39,24 @@ export function calculateRoute(
   endZoneId: string,
   zones: Zone[],
   paths: Path[],
+  liveStates: Record<string, ZoneLiveState> = {},
   policy: RoutePolicy = 'Normal'
 ): RouteResult {
   // Construct a temporary graph using the live state from context
+  const mergedZones = zones.map(z => {
+    const live = liveStates[z.id];
+    if (!live) return z;
+    return {
+      ...z,
+      congestionBand: statusToBand(live.status),
+      densityScore: live.density
+    };
+  });
+
   const graph: VenueGraph = {
-    nodes: zones, // simplified: all zones/amenities are nodes
-    zones,
-    amenities: [], // amenities should be nodes too if we want to route to them
+    nodes: mergedZones,
+    zones: mergedZones,
+    amenities: [],
     paths
   };
 
@@ -47,7 +69,7 @@ export function calculateRoute(
       distance: s.weight * 100,
       zoneId: s.nodeId
     })),
-    totalTime: result.totalWeight,
+    totalTime: result.totalTime,
     status: result.status === 'Safe' ? 'Clear' : result.status,
     explanation: result.explanation
   };

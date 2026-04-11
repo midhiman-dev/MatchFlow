@@ -117,7 +117,13 @@ export const MatchCenter: React.FC<MatchCenterProps> = ({ onNavigate }) => {
               {activeScenario === 'InningsBreak' 
                 ? "Innings break in 5 mins. Concourse traffic is expected to spike soon. Order snacks now?"
                 : activeScenario === 'WicketSurge'
-                ? "Wicket surge detected! Avoid Gate B for the next 10 mins for a smoother exit."
+                ? "Wicket surge detected! Avoid Stand North corridors for a smoother route."
+                : activeScenario === 'DRSSpike'
+                ? "DRS Review in progress. Use this 2-minute window to grab refreshments!"
+                : activeScenario === 'ExitRush'
+                ? "Match ending. Exit Gates A and B are currently clearest. Follow safety markers."
+                : activeScenario === 'Emergency'
+                ? "EMERGENCY: Path blocked in South Concourse. Follow redirected route to Gate D."
                 : "Match is in progress. Perfect time to grab snacks with zero wait time at most stalls."}
             </p>
           </div>

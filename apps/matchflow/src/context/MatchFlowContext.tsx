@@ -143,18 +143,35 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       }
 
       // Keep Match Center specific state updates
+      const timestamp = new Date().toISOString();
+      const id = Date.now().toString();
+
       if (scenario === 'InningsBreak') {
         newState.match = { ...s.match, moment: 'Innings Break Soon', timeToBreak: 5 };
         newState.alerts = [
-          { id: Date.now().toString(), type: 'Recommendation', title: 'Innings Break Soon', message: 'Order snacks now to skip the rush.', timestamp: new Date().toISOString(), isRead: false },
+          { id, type: 'Recommendation', title: 'Innings Break Soon', message: 'Order snacks now to skip the rush.', timestamp, isRead: false },
+          ...s.alerts
+        ];
+      } else if (scenario === 'DRSSpike') {
+        newState.alerts = [
+          { id, type: 'Info', title: 'DRS Review', message: 'Perfect time to browse the menu!', timestamp, isRead: false },
           ...s.alerts
         ];
       } else if (scenario === 'WicketSurge') {
         newState.match = { ...s.match, moment: 'Wicket Surge' };
+        newState.alerts = [
+          { id, type: 'Warning', title: 'Stand Congestion', message: 'High traffic detected near Stand North.', timestamp, isRead: false },
+          ...s.alerts
+        ];
+      } else if (scenario === 'ExitRush') {
+        newState.alerts = [
+          { id, type: 'Info', title: 'Match Ending', message: 'Gates A and B are currently clearest for exit.', timestamp, isRead: false },
+          ...s.alerts
+        ];
       } else if (scenario === 'Emergency') {
         newState.emergencyActive = true;
         newState.alerts = [
-          { id: Date.now().toString(), type: 'Emergency', title: 'EMERGENCY ACTIVE', message: 'Path blocked in South Concourse. Follow directed route to Gate D.', timestamp: new Date().toISOString(), isRead: false },
+          { id, type: 'Emergency', title: 'EMERGENCY ACTIVE', message: 'Path blocked in South Concourse. Follow directed route to Gate D.', timestamp, isRead: false },
           ...s.alerts
         ];
       } else if (scenario === 'Normal') {
