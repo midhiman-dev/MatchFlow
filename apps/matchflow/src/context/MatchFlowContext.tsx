@@ -1,8 +1,9 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { AppState, ScenarioType, Zone, Amenity, Alert, Order, MatchState, CongestionBand, ZoneLiveState, AmenityLiveState } from '../types';
+import { AppState, ScenarioType, Zone, Amenity, Alert, Order, MatchState, CongestionBand, ZoneLiveState, AmenityLiveState, MenuProduct, ServiceMode } from '../types';
 import { INITIAL_ZONES, INITIAL_AMENITIES, INITIAL_PATHS, INITIAL_MATCH } from '../constants';
 import { LiveStateService } from '../services/liveStateService';
+import { updateCartItem, placeOrder, createInitialCart } from '../services/orderService';
 
 interface MatchFlowContextType extends AppState {
   setRole: (role: AppState['role']) => void;
@@ -10,7 +11,15 @@ interface MatchFlowContextType extends AppState {
   triggerScenario: (scenario: ScenarioType) => void;
   toggleEmergency: (active: boolean) => void;
   addAlert: (alert: Omit<Alert, 'id' | 'timestamp' | 'isRead'>) => void;
-  placeOrder: (order: Omit<Order, 'id' | 'timestamp' | 'status'>) => void;
+  
+  // Ordering Actions
+  addToCart: (product: MenuProduct) => void;
+  removeFromCart: (productId: string) => void;
+  updateCartQuantity: (product: MenuProduct, quantity: number) => void;
+  setServiceMode: (mode: ServiceMode, seatInfo?: string) => void;
+  submitOrder: () => void;
+  clearCart: () => void;
+  
   updateZoneStatus: (zoneId: string, status: Zone['status']) => void;
   resetState: () => void;
   liveStates: Record<string, ZoneLiveState>;
@@ -122,15 +131,44 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     }));
   };
 
-  const placeOrder = (order: Omit<Order, 'id' | 'timestamp' | 'status'>) => {
-    const newOrder: Order = {
-      ...order,
-      id: 'ORD-' + Math.random().toString(36).substr(2, 9).toUpperCase(),
-      timestamp: new Date().toISOString(),
-      status: state.connectivity === 'Offline' ? 'Pending' : 'Confirmed'
-    };
-    setState(s => ({ ...s, orders: [newOrder, ...s.orders] }));
+  const addToCart = (product: MenuProduct) => {
+    setState(s => ({ ...s, cart: updateCartItem(s.cart, product, (s.cart.items.find(i => i.productId === product.id)?.quantity || 0) + 1) }));
   };
+
+  const removeFromCart = (productId: string) => {
+    setState(s => {
+      const item = s.cart.items.find(i => i.productId === productId);
+      if (!item) return s;
+      return { ...s, cart: updateCartItem(s.cart, { id: productId } as any, item.quantity - 1) };
+    });
+  };
+
+  const updateCartQuantity = (product: MenuProduct, quantity: number) => {
+    setState(s => ({ ...s, cart: updateCartItem(s.cart, product, quantity) }));
+  };
+
+  const setServiceMode = (mode: ServiceMode, seatInfo?: string) => {
+    setState(s => ({ ...s, cart: { ...s.cart, serviceMode: mode, seatInfo } }));
+  };
+
+  const submitOrder = () => {
+    setState(s => {
+      const newOrder = placeOrder(s.cart, s.role + '-USER', s.connectivity);
+      const orders = [newOrder, ...s.orders];
+      const pendingSyncOrders = newOrder.isOfflinePending 
+        ? [newOrder, ...s.pendingSyncOrders] 
+        : s.pendingSyncOrders;
+      
+      return {
+        ...s,
+        orders,
+        pendingSyncOrders,
+        cart: createInitialCart(s.cart.serviceMode)
+      };
+    });
+  };
+
+  const clearCart = () => setState(s => ({ ...s, cart: createInitialCart(s.cart.serviceMode) }));
 
   const updateZoneStatus = (zoneId: string, status: Zone['status']) => {
     setState(s => ({
@@ -150,6 +188,8 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       paths: INITIAL_PATHS,
       alerts: [],
       orders: [],
+      cart: createInitialCart(),
+      pendingSyncOrders: [],
       match: INITIAL_MATCH,
       fanLocation: 'z1',
       lastSyncTime: new Date().toISOString(),
@@ -177,7 +217,24 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   }, [state.activeScenario]);
 
   return (
-    <MatchFlowContext.Provider value={{ ...state, liveStates, amenityLiveStates, setRole, setConnectivity, triggerScenario, toggleEmergency, addAlert, placeOrder, updateZoneStatus, resetState }}>
+    <MatchFlowContext.Provider value={{ 
+      ...state, 
+      liveStates, 
+      amenityLiveStates, 
+      setRole, 
+      setConnectivity, 
+      triggerScenario, 
+      toggleEmergency, 
+      addAlert, 
+      addToCart,
+      removeFromCart,
+      updateCartQuantity,
+      setServiceMode,
+      submitOrder,
+      clearCart,
+      updateZoneStatus, 
+      resetState 
+    }}>
       {children}
     </MatchFlowContext.Provider>
   );
