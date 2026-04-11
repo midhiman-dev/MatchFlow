@@ -5,6 +5,8 @@ import { INITIAL_ZONES, INITIAL_AMENITIES, INITIAL_PATHS, INITIAL_MATCH } from '
 import { LiveStateService } from '../services/liveStateService';
 import { updateCartItem, placeOrder, createInitialCart } from '../services/orderService';
 import { EmergencyService } from '../services/emergencyService';
+import { ConnectivityService } from '../services/connectivityService';
+import { SyncService } from '../services/syncService';
 
 interface MatchFlowContextType extends AppState {
   setRole: (role: AppState['role']) => void;
@@ -69,6 +71,17 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     
     const unsubAmenities = LiveStateService.getInstance().subscribeToAmenities((states) => {
       setAmenityLiveStates(states);
+    });
+
+    const unsubConnectivity = ConnectivityService.getInstance().subscribe((status) => {
+      setConnectivity(status === 'online' ? 'Connected' : 'Offline');
+    });
+
+    // Register Sync Handlers
+    SyncService.getInstance().registerHandler('PLACE_ORDER', async (payload) => {
+      console.log('[SyncService] Successfully synced offline order:', payload.id);
+      // For MVP T1, the outbox flush itself handles removal from outbox.
+      // We could also trigger a state update here if we want to change order status from 'Pending' to 'Confirmed'.
     });
 
     // For the MVP, we poll the emergency service or ideally would subscribe
@@ -206,14 +219,14 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setState(s => {
       const newOrder = placeOrder(s.cart, s.role + '-USER', s.connectivity);
       const orders = [newOrder, ...s.orders];
-      const pendingSyncOrders = newOrder.isOfflinePending 
-        ? [newOrder, ...s.pendingSyncOrders] 
-        : s.pendingSyncOrders;
       
+      if (newOrder.isOfflinePending) {
+        SyncService.getInstance().enqueue('PLACE_ORDER', newOrder);
+      }
+
       return {
         ...s,
         orders,
-        pendingSyncOrders,
         cart: createInitialCart(s.cart.serviceMode)
       };
     });
