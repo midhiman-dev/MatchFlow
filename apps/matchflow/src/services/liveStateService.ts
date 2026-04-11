@@ -40,7 +40,7 @@ export class LiveStateService {
     return this.instance;
   }
 
-  private createMockZoneState(zoneId: string, density: number): ZoneLiveState {
+  private createMockZoneState(zoneId: string, density: number, overrides: Partial<ZoneLiveState> = {}): ZoneLiveState {
     return {
       zoneId,
       density,
@@ -50,7 +50,8 @@ export class LiveStateService {
       exitRate: Math.floor(density * 20),
       queuePressure: density * 0.8,
       updatedAt: Date.now(),
-      confidence: 0.95
+      confidence: 0.95,
+      ...overrides
     };
   }
 
@@ -89,10 +90,24 @@ export class LiveStateService {
   }
 
   /**
+   * Gets the current state of a specific zone.
+   */
+  public getCurrentZoneState(zoneId: string): ZoneLiveState | undefined {
+    return this.currentZoneStates[zoneId];
+  }
+
+  /**
+   * Gets the current state of a specific amenity.
+   */
+  public getCurrentAmenityState(amenityId: string): AmenityLiveState | undefined {
+    return this.currentAmenityStates[amenityId];
+  }
+
+  /**
    * Manually trigger a mock zone update.
    */
-  public triggerMockZoneUpdate(zoneId: string, newDensity: number) {
-    this.currentZoneStates[zoneId] = this.createMockZoneState(zoneId, newDensity);
+  public triggerMockZoneUpdate(zoneId: string, newDensity: number, overrides: Partial<ZoneLiveState> = {}) {
+    this.currentZoneStates[zoneId] = this.createMockZoneState(zoneId, newDensity, overrides);
     this.notifyZones();
   }
 

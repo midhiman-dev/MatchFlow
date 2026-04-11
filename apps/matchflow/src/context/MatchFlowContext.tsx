@@ -7,6 +7,7 @@ import { updateCartItem, placeOrder, createInitialCart } from '../services/order
 import { EmergencyService } from '../services/emergencyService';
 import { ConnectivityService } from '../services/connectivityService';
 import { SyncService } from '../services/syncService';
+import { SimulationService } from '../services/simulationService';
 
 interface MatchFlowContextType extends AppState {
   setRole: (role: AppState['role']) => void;
@@ -133,48 +134,30 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     setState(s => {
       const newState = { ...s, activeScenario: scenario };
       
-      // Simulation Logic
+      // Delegation to Simulation Engine
+      const simService = SimulationService.getInstance();
+      if (scenario === 'Normal') {
+        simService.reset();
+      } else {
+        simService.start(scenario);
+      }
+
+      // Keep Match Center specific state updates
       if (scenario === 'InningsBreak') {
-        newState.zones = s.zones.map(z => z.type === 'Concourse' ? { ...z, congestionBand: 'Critical', densityScore: 0.95 } : z);
         newState.match = { ...s.match, moment: 'Innings Break Soon', timeToBreak: 5 };
         newState.alerts = [
           { id: Date.now().toString(), type: 'Recommendation', title: 'Innings Break Soon', message: 'Order snacks now to skip the rush.', timestamp: new Date().toISOString(), isRead: false },
           ...s.alerts
         ];
       } else if (scenario === 'WicketSurge') {
-        newState.zones = s.zones.map(z => z.id === 'z1' ? { ...z, congestionBand: 'Critical', densityScore: 0.98 } : z);
         newState.match = { ...s.match, moment: 'Wicket Surge' };
       } else if (scenario === 'Emergency') {
-        const service = EmergencyService.getInstance();
-        const cmd = service.createCommand('activateEmergency', 'system-sim', {
-          level: 'critical',
-          message: 'Path blocked in South Concourse. Follow directed route to Gate D.',
-          reason: 'Simulation Trigger'
-        });
-        service.confirmCommand(cmd.id);
-
-        const closureCmd = service.createCommand('closeZone', 'system-sim', {
-          targetId: 'z6',
-          reason: 'Emergency Simulation'
-        });
-        service.confirmCommand(closureCmd.id);
-
         newState.emergencyActive = true;
-        newState.zones = s.zones.map(z => z.id === 'z6' ? { ...z, status: 'emergency', congestionBand: 'Critical' } : z);
         newState.alerts = [
           { id: Date.now().toString(), type: 'Emergency', title: 'EMERGENCY ACTIVE', message: 'Path blocked in South Concourse. Follow directed route to Gate D.', timestamp: new Date().toISOString(), isRead: false },
           ...s.alerts
         ];
       } else if (scenario === 'Normal') {
-        const service = EmergencyService.getInstance();
-        const cmd = service.createCommand('clearEmergency', 'system-sim', { reason: 'Reset to Normal' });
-        service.confirmCommand(cmd.id);
-
-        // Open z6 if it was closed
-        const openCmd = service.createCommand('openZone', 'system-sim', { targetId: 'z6', reason: 'Reset to Normal' });
-        service.confirmCommand(openCmd.id);
-
-        newState.zones = INITIAL_ZONES;
         newState.match = INITIAL_MATCH;
         newState.emergencyActive = false;
       }
@@ -260,25 +243,7 @@ export const MatchFlowProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     });
   };
 
-  // Simulation Tick Loop
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setState(s => {
-        if (s.activeScenario === 'Normal') return s;
-        
-        // Minor fluctuations
-        return {
-          ...s,
-          zones: s.zones.map(z => ({
-            ...z,
-            currentFans: Math.max(0, z.currentFans + (Math.random() > 0.5 ? 10 : -10)),
-            updatedAt: new Date().toISOString()
-          }))
-        };
-      });
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [state.activeScenario]);
+  // Simulation Engine is now managed by SimulationService
 
   return (
     <MatchFlowContext.Provider value={{ 
