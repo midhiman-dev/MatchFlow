@@ -94,19 +94,19 @@ When making trade-offs, optimize in this order:
 - Separate operator dashboard UI
 
 ### Backend / Platform
-- Firebase Realtime Database for live state
-- Firestore for durable structured data
-- Cloud Run for services/APIs
-- Pub/Sub for event ingestion and simulator pipelines
-- Firebase Cloud Messaging for alerts
-- Firebase Auth for authenticated flows
-- Firebase App Check where applicable
+- Google Firebase Realtime Database for live state
+- Google Cloud Firestore for durable structured data
+- Google Cloud Run for services/APIs execution
+- Google Cloud Pub/Sub for event ingestion and simulator pipelines
+- Google Firebase Cloud Messaging for alerts
+- Google Firebase Auth for authenticated flows
+- Google Firebase App Check where applicable
 
 ### AI / Google Tooling
-- Antigravity for spec-driven implementation
-- Stitch for UI design generation
-- AI Studio for functional prototypes and assistant logic exploration
-- Gemini for assistant/recommendation behavior
+- Google Generative AI (Gemini Flash) for assistant/recommendation behavior via @google/generative-ai
+- Google Antigravity for spec-driven implementation
+- Google Stitch for UI design generation
+- Google AI Studio for functional prototypes and assistant logic exploration
 
 ### Optional / later
 - BigQuery

@@ -10,6 +10,10 @@ import { OpsApp } from './screens/OpsApp';
 import { StewardApp } from './screens/StewardApp';
 import { RoleSwitcher } from './components/RoleSwitcher';
 
+// Initialize Google Services for the application layer
+import './lib/firebase';
+import './lib/gemini';
+
 function AppContent() {
   const { role } = useMatchFlow();
 
