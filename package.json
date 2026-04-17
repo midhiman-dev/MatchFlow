@@ -1,0 +1,15 @@
+{
+  "name": "matchflow-root",
+  "private": true,
+  "version": "0.1.0",
+  "description": "MatchFlow Smart Stadium Assistant Root",
+  "scripts": {
+    "dev": "npm run dev --prefix apps/matchflow",
+    "build": "npm run build --prefix apps/matchflow",
+    "lint": "npm run lint --prefix apps/matchflow",
+    "clean": "npm run clean --prefix apps/matchflow"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
