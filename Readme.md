@@ -2,52 +2,45 @@
 
 MatchFlow is a smart stadium assistant for large cricket venues, designed to help manage innings-break surges, end-of-match exits, fan utility journeys, and safety-first crowd movement.
 
-The project is being built as a high-velocity, challenge-scoped 72-hour MVP focused on practical, real-world usability for cricket venues such as Narendra Modi Stadium, Eden Gardens, and similar high-capacity stadium environments.
-
-Live demo: https://matchflow-972157503709.us-west1.run.app
+Live demo: [https://matchflow-972157503709.us-west1.run.app](https://matchflow-972157503709.us-west1.run.app)
 
 ---
 
-## Vision
+## 🏟️ Problem Statement
+Design a solution that improves the physical event experience for attendees at large-scale sporting venues. The system should address challenges such as crowd movement, waiting times, and real-time coordination, while ensuring a seamless and enjoyable experience.
 
-MatchFlow aims to improve both the **fan experience** and **stadium operations** by combining:
+## 🎯 Chosen Vertical
+**Large-Scale Cricket Stadiums** (e.g., Narendra Modi Stadium, Eden Gardens).
+Cricket venues are unique due to intense, predictable "surge moments":
+- Innings breaks
+- Decision Review (DRS) intervals
+- Wickets and momentum swings
+- End-of-match exit surges
 
-- real-time crowd flow awareness
-- queue alerts for washrooms and concessions
-- smart fan rerouting during peak surges
-- in-seat snack ordering
-- emergency routing support
-- live match-aware engagement
+## 🧠 Approach and Logic
+MatchFlow uses a **Spec-Driven Development (SDD)** approach to build a modular, believable MVP in a high-velocity timeframe. 
 
-At a high level, MatchFlow is intended to function as:
+The logic centers on a **Zone-Based Digital Twin**:
+- **Granularity**: The stadium is modeled at the zone/stand level (rather than individual seats) to provide actionable crowd flow data.
+- **Real-time State**: A shared live state layer tracks density, flow pressure, and amenity wait times.
+- **Intelligent Rerouting**: Instead of just showing simple maps, MatchFlow provides "next-best-action" suggestions (e.g., "Use Washroom B instead of A to save 12 mins").
+- **Simulation-First**: For the MVP, a cricket-aware event simulator generates believable traffic patterns to exercise the routing and alerting logic.
 
-- a **fan-facing mobile/PWA experience**
-- an **operator dashboard**
-- a **simulation/event layer**
-- an **assistant/recommendation layer**
-- a simplified **digital twin routing model**
+## ⚙️ How the Solution Works
+1. **Event Ingestion**: The system consumes live stadium data (emulated via the Simulator) including gate entries, concourse sensors, and concession queue lengths.
+2. **State Processing**: Data is synchronized via **Firebase Realtime Database** to provide sub-second updates to all clients.
+3. **Fan Application**: Fans access a mobile-first PWA that provides:
+   - **Match Center**: Context-aware match updates and seat info.
+   - **Smart Amenities**: Live wait times and "best bet" recommendations.
+   - **Dynamic Routing**: Congestion-aware paths and emergency-safe exits.
+   - **In-Seat Ordering**: Frictionless ordering to reduce concourse congestion.
+4. **Operator Dashboard**: Stadium staff see a "Heat Map" of the venue, allowing them to identify hotspots, trigger emergency reroutes, and manage amenity statuses.
 
----
-
-## Problem We Are Solving
-
-Cricket stadiums experience strong but predictable surge moments, especially during:
-
-- innings breaks
-- Decision Review (DRS) moments
-- wickets and momentum swings
-- end-of-match exits
-
-These moments often create:
-
-- long queues at concessions and washrooms
-- concourse bottlenecks
-- poor crowd distribution
-- missed concession revenue
-- safety concerns
-- frustrating fan experiences
-
-MatchFlow is being designed to reduce these problems through smarter routing, better live visibility, and context-aware digital assistance.
+## 📝 Assumptions Made
+- **Connectivity**: Users have access to at least intermittent mobile data/stadium Wi-Fi (the app includes lightweight offline fallback).
+- **Zone Authority**: Zone-level density tracking is sufficient for effective crowd management (seat-level live tracking is out of scope).
+- **Layout Graph**: The stadium concourse and exit structure is modeled as a known directed graph of connected zones.
+- **User Cooperation**: A significant portion of fans will follow assistant prompts if they clearly save time or improve safety.
 
 ---
 
@@ -154,3 +147,4 @@ packages/            # Shared types, utilities, UI components
 docs/                # Product, architecture, design, API, and testing docs
 tests/               # Unit, integration, e2e, and fixtures
 scripts/             # Setup and seed scripts
+```
